@@ -1,0 +1,686 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'Noto Serif SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.8;
+    color: #555;
+    background-color: #FFF5F5;
+    background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z" fill="%23FFB7B2" fill-opacity="0.15" fill-rule="evenodd"/%3E%3C/svg%3E');
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+@supports (-webkit-touch-callout: none) {
+    body {
+        min-height: -webkit-fill-available;
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 5%;
+}
+
+header {
+    background: linear-gradient(135deg, #FFB7B2 0%, #FFDAC1 100%);
+    color: #555;
+    padding: 30px 0;
+    text-align: center;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(255, 183, 178, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+    
+    header p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.2rem;
+    }
+    
+    header p {
+        font-size: 0.8rem;
+    }
+}
+
+/* 首页主题 - 粉色系 */
+body.home {
+    background-color: #FFF5F5;
+}
+
+body.home header {
+    background: linear-gradient(135deg, #FFB7B2 0%, #FFDAC1 100%);
+}
+
+body.home nav a {
+    color: #FF9AA2;
+}
+
+/* 每日灵修主题 - 绿色系 */
+body.devotion {
+    background-color: #F0FFF4;
+}
+
+body.devotion .devotion-header {
+    background: linear-gradient(135deg, #B5EAD7 0%, #A8E6CF 100%);
+}
+
+body.devotion .back-home {
+    background: #88D8B0;
+}
+
+body.devotion .back-home:hover {
+    background: #A8E6CF;
+}
+
+/* 每日研经主题 - 蓝色系 */
+body.study {
+    background-color: #F0F7FF;
+}
+
+body.study .study-header {
+    background: linear-gradient(135deg, #C7CEEA 0%, #B5D8EB 100%);
+}
+
+body.study .back-home {
+    background: #7EB8E8;
+}
+
+body.study .back-home:hover {
+    background: #B5D8EB;
+}
+
+/* 电子书主题 - 紫色系 */
+body.books {
+    background-color: #F5F0FF;
+}
+
+/* 灵修主题 - 绿色系 */
+body.devotion {
+    background-color: #F0FFF4;
+}
+
+body.devotion .study-header {
+    background: linear-gradient(135deg, #A8E6CF, #88D8B0);
+    color: #2D5A4A;
+}
+
+body.devotion .back-home {
+    background: linear-gradient(135deg, #56C596, #7BE495);
+    box-shadow: 0 2px 10px rgba(86, 197, 150, 0.3);
+}
+
+body.devotion .back-home:hover {
+    background: linear-gradient(135deg, #44B883, #6AD48A);
+    box-shadow: 0 4px 15px rgba(86, 197, 150, 0.4);
+}
+
+body.books .books-header {
+    background: linear-gradient(135deg, #E2B9E8 0%, #DDA0DD 100%);
+}
+
+body.books .back-home {
+    background: #C9A0DC;
+}
+
+body.books .back-home:hover {
+    background: #DDA0DD;
+}
+
+/* 数字孪生教堂主题 - 蓝绿色系 */
+body.church {
+    background-color: #E8F8F5;
+}
+
+body.church .church-header {
+    background: linear-gradient(135deg, #88D8B0 0%, #B5D8EB 100%);
+}
+
+body.church .back-home {
+    background: #7EB8C8;
+}
+
+body.church .back-home:hover {
+    background: #9FD3E8;
+}
+
+/* 听道笔记主题 - 橙色系 */
+body.bible-notes {
+    background-color: #FFF8F0;
+}
+
+body.bible-notes .add-note {
+    background: linear-gradient(135deg, #FFD3B6 0%, #FFAAA5 100%);
+}
+
+body.bible-notes .back-home {
+    background: #FF9A8B;
+}
+
+body.bible-notes .back-home:hover {
+    background: #FFAAA5;
+}
+
+/* 灵修笔记主题 - 薄荷色系 */
+body.devotion-notes {
+    background-color: #F0FFFB;
+}
+
+body.devotion-notes .add-note {
+    background: linear-gradient(135deg, #AAFFD9 0%, #AAE3D9 100%);
+}
+
+body.devotion-notes .back-home {
+    background: #88D8B8;
+}
+
+body.devotion-notes .back-home:hover {
+    background: #AAE3D9;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.25"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+    opacity: 0.4;
+}
+
+header .header-content {
+    position: relative;
+    z-index: 1;
+}
+
+header h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 20px;
+}
+
+header .bible-verse {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+nav {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 15px rgba(255, 218, 193, 0.4);
+    text-align: center;
+}
+
+nav a {
+    color: #FF9AA2;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+nav a:hover {
+    color: #FFB7B2;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #FF9AA2;
+    transition: width 0.3s ease;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+/* 下拉菜单样式 */
+nav .dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+nav .dropdown .dropbtn {
+    color: #FF9AA2;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+nav .dropdown .dropbtn:hover {
+    color: #FFB7B2;
+}
+
+nav .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    z-index: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    top: 100%;
+    left: 0;
+    margin-top: 5px;
+}
+
+nav .dropdown-content a {
+    color: #555;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    margin: 0;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+nav .dropdown-content a:hover {
+    background-color: #FFF5F5;
+    color: #FF9AA2;
+}
+
+nav .dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.post-list {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 2px 15px rgba(255, 218, 193, 0.4);
+    margin-bottom: 40px;
+}
+
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.post {
+    padding: 25px;
+    border-radius: 15px;
+    background: #FFF5F5;
+    transition: all 0.3s ease;
+    border: 1px solid #FFE0E0;
+}
+
+.post:hover {
+    transform: translateX(10px);
+}
+
+.post:last-child {
+    border-bottom: none;
+}
+
+.post-title {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.post-title a {
+    color: #555;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.post-title a:hover {
+    color: #FF9AA2;
+}
+
+.post-date {
+    color: #999;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.post-date::before {
+    content: '📅';
+    margin-right: 8px;
+}
+
+.post-excerpt {
+    color: #666;
+    line-height: 1.8;
+    font-size: 1.05rem;
+}
+
+.post-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 2px 15px rgba(255, 218, 193, 0.4);
+    margin-bottom: 40px;
+}
+
+.post-content h1 {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+    color: #555;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #FF9AA2;
+}
+
+.post-content h2 {
+    font-size: 1.6rem;
+    margin: 30px 0 20px;
+    color: #FFB7B2;
+}
+
+.post-content p {
+    margin-bottom: 20px;
+    line-height: 1.8;
+    text-align: justify;
+}
+
+.post-content code {
+    background: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: "Courier New", monospace;
+}
+
+.post-content pre {
+    background: #FFF0F0;
+    padding: 20px;
+    border-radius: 10px;
+    overflow-x: auto;
+    margin: 20px 0;
+    border-left: 4px solid #FF9AA2;
+}
+
+.post-content pre code {
+    background: none;
+    padding: 0;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 30px;
+    color: #FF9AA2;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    color: #FFB7B2;
+    transform: translateX(-5px);
+}
+
+.back-link::before {
+    content: '← ';
+}
+
+footer {
+    text-align: center;
+    padding: 40px 0;
+    color: #999;
+    background: white;
+    border-radius: 20px;
+    margin-top: 40px;
+    box-shadow: 0 -2px 15px rgba(255, 218, 193, 0.4);
+}
+
+footer .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer .bible-verse {
+    font-style: italic;
+    margin-bottom: 20px;
+    color: #FF9AA2;
+}
+
+footer .copyright {
+    font-size: 0.9rem;
+}
+
+/* 基督教元素样式 */
+.christian-symbol {
+    display: inline-block;
+    margin: 0 10px;
+    font-size: 1.2rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .container {
+        padding: 20px 3%;
+    }
+}
+
+@media (max-width: 992px) {
+    header h1 {
+        font-size: 2.5rem;
+    }
+    
+    nav a {
+        margin: 0 10px;
+        font-size: 1rem;
+    }
+    
+    .post-title {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 20px 0;
+    }
+    
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    header p {
+        font-size: 1rem;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    .post-list,
+    .post-content {
+        padding: 20px;
+    }
+
+    nav {
+        padding: 15px;
+    }
+    
+    nav a {
+        display: block;
+        margin: 8px 0;
+        font-size: 0.95rem;
+    }
+    
+    nav .dropdown {
+        display: block;
+        margin: 8px 0;
+    }
+    
+    nav .dropdown .dropbtn {
+        margin: 0;
+    }
+    
+    nav .dropdown-content {
+        position: static;
+        box-shadow: none;
+        margin-top: 10px;
+        background-color: #FFF5F5;
+    }
+    
+    nav .dropdown-content a {
+        padding: 10px 15px;
+    }
+
+    .post:hover {
+        transform: none;
+    }
+    
+    .post-title {
+        font-size: 1.3rem;
+    }
+    
+    .post-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .post-content h2 {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 576px) {
+    header h1 {
+        font-size: 1.6rem;
+    }
+    
+    header p {
+        font-size: 0.9rem;
+    }
+    
+    header .bible-verse {
+        font-size: 0.85rem;
+    }
+    
+    .container {
+        padding: 10px;
+    }
+    
+    nav {
+        padding: 10px;
+    }
+    
+    nav a {
+        font-size: 0.9rem;
+        margin: 6px 0;
+    }
+    
+    .post-list,
+    .post-content {
+        padding: 15px;
+    }
+    
+    .post {
+        padding: 20px 0;
+    }
+    
+    .post-title {
+        font-size: 1.2rem;
+    }
+    
+    .post-date {
+        font-size: 0.85rem;
+    }
+    
+    .post-excerpt {
+        font-size: 0.95rem;
+    }
+    
+    .post-content h1 {
+        font-size: 1.5rem;
+    }
+    
+    .post-content h2 {
+        font-size: 1.2rem;
+    }
+    
+    .post-content p {
+        font-size: 0.95rem;
+    }
+    
+    footer {
+        padding: 20px 0;
+    }
+    
+    footer .copyright {
+        font-size: 0.8rem;
+    }
+}
+
+/* 加载动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.post {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.post:nth-child(1) { animation-delay: 0.1s; }
+.post:nth-child(2) { animation-delay: 0.2s; }
+.post:nth-child(3) { animation-delay: 0.3s; }
+.post:nth-child(4) { animation-delay: 0.4s; }
+.post:nth-child(5) { animation-delay: 0.5s; }

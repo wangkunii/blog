@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>讲道学 - 门徒训练</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .book-container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .book-header { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px; text-align: center; }
+        .book-title { font-size: 2rem; color: #1890ff; margin-bottom: 15px; }
+        .book-description { line-height: 1.8; margin-bottom: 20px; color: #666; }
+        .pdf-viewer { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .pdf-viewer iframe { width: 100%; height: 800px; border: none; border-radius: 4px; }
+        .download-section { text-align: center; padding: 20px; background: #e6f7ff; border-radius: 8px; }
+        .download-btn { display: inline-block; padding: 12px 30px; background-color: #1890ff; color: white; text-decoration: none; border-radius: 4px; font-size: 1.1rem; transition: all 0.3s ease; }
+        .download-btn:hover { background-color: #096dd9; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3); }
+        .nav-container { position: relative; margin-bottom: 30px; }
+        .nav-toggle { display: none; background-color: #1890ff; color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; width: 100%; text-align: left; box-shadow: 0 2px 10px rgba(24, 144, 255, 0.3); transition: all 0.3s ease; }
+        nav { position: relative; display: flex; gap: 15px; padding: 15px; background: linear-gradient(135deg, #1890ff, #096dd9); justify-content: center; align-items: center; border-radius: 8px; box-shadow: 0 2px 10px rgba(24, 144, 255, 0.3); z-index: 1000; }
+        nav a { color: white; text-decoration: none; padding: 8px 12px; border-radius: 4px; font-size: 0.95rem; transition: all 0.3s ease; }
+        nav a:hover { background-color: rgba(255, 255, 255, 0.2); }
+        .dropdown { position: relative; display: inline-block; }
+        .dropbtn { color: white; padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.95rem; }
+        .dropbtn:hover { background-color: rgba(255, 255, 255, 0.2); }
+        .dropdown-content { display: none; position: absolute; background-color: #fff; min-width: 180px; box-shadow: 0px 8px 16px rgba(24, 144, 255, 0.15); z-index: 1001; border-radius: 4px; top: 100%; left: 0; margin-top: 5px; }
+        .dropdown-content a { color: #333; padding: 10px 14px; text-decoration: none; display: block; font-size: 0.9rem; }
+        .dropdown-content a:hover { background-color: #e6f7ff; color: #1890ff; }
+        .dropdown:hover .dropdown-content { display: block; }
+        @media (max-width: 992px) { .nav-toggle { display: block; } nav { display: none; flex-direction: column; padding: 10px; } nav.active { display: flex; } nav a { width: 100%; padding: 10px 15px; text-align: left; } .dropdown { width: 100%; } .dropdown-content { position: static; width: 100%; margin-top: 0; box-shadow: none; } }
+        
+        @media (max-width: 768px) {
+            .book-title { font-size: 1.4rem; }
+            .book-description { font-size: 0.9rem; line-height: 1.7; }
+            .pdf-viewer iframe { height: 500px; }
+            .download-btn { padding: 10px 20px; font-size: 1rem; display: block; margin: 10px 0; }
+            .book-header { padding: 20px; }
+            .pdf-viewer { padding: 15px; }
+        }
+        
+        @media (max-width: 480px) {
+            .book-title { font-size: 1.2rem; }
+            .book-description { font-size: 0.85rem; line-height: 1.6; }
+            .pdf-viewer iframe { height: 400px; }
+            .download-btn { padding: 8px 16px; font-size: 0.9rem; }
+            .book-header { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-container">
+            <button class="nav-toggle" onclick="toggleNav()">☰ 菜单</button>
+            <nav id="main-nav">
+                <a href="../index.html">首页</a>
+                <a href="../pages/daily-devotion.html">每日灵修</a>
+                <a href="../pages/daily-bible-study.html">每日研经</a>
+                <a href="../pages/books.html">电子书</a>
+                <div class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">门徒训练 ▼</a>
+                    <div class="dropdown-content">
+                        <a href="book1.html">01 以生命影响生命</a>
+                        <a href="book2.html">02 初信栽培系列</a>
+                        <a href="book3.html">03 信徒培训课程26课</a>
+                        <a href="book4.html">04 教会完整观、认识圣灵的恩赐和进入事奉</a>
+                        <a href="book5.html">05 查经法</a>
+                        <a href="book6.html">06 讲道学</a>
+                        <a href="book7.html">07 祷告服侍的培训课程</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">闯关游戏 ▼</a>
+                    <div class="dropdown-content">
+                        <a href="../games/game1/index.html">游戏1：以生命影响生命</a>
+                        <a href="../games/game2/index.html">游戏2：初信栽培系列</a>
+                        <a href="../games/game3/index.html">游戏3：信徒培训课程</a>
+                        <a href="../games/game4/index.html">游戏4：教会完整观</a>
+                        <a href="../games/game5/index.html">游戏5：查经法</a>
+                        <a href="../games/game6/index.html">游戏6：讲道学</a>
+                        <a href="../games/game7/index.html">游戏7：祷告服侍</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">工具 ▼</a>
+                    <div class="dropdown-content">
+                        <a href="../tools/attendance.html">点名系统</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="book-container">
+            <div class="book-header">
+                <h1 class="book-title">讲道学</h1>
+                <p class="book-description">学习讲道的基本原则和方法，掌握如何有效地传达神的话语，装备信徒成为神话语的出口。</p>
+            </div>
+            <div class="pdf-viewer">
+                <h2>课程内容</h2>
+                <iframe src="06 讲道学.pdf" title="讲道学"></iframe>
+            </div>
+            <div class="download-section">
+                <a href="06 讲道学.pdf" class="download-btn" download>下载文件</a>
+            </div>
+        </div>
+        <footer>
+            <div class="footer-content">
+                <div class="bible-verse">
+                    <span class="christian-symbol">✝</span> 敬畏耶和华是智慧的开端，认识至圣者便是聪明 - 箴言 9:10 <span class="christian-symbol">✝</span>
+                </div>
+                <div class="copyright">© 2026 林前先生的博客 保留所有权利</div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        function toggleNav() {
+            const nav = document.getElementById('main-nav');
+            nav.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

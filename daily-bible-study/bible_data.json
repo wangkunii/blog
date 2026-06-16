@@ -1,0 +1,240 @@
+{
+    "books": [
+        {"id": 1, "name": "创世记", "chapters": 50, "abbrev": "创", "testament": "old"},
+        {"id": 2, "name": "出埃及记", "chapters": 40, "abbrev": "出", "testament": "old"},
+        {"id": 3, "name": "利未记", "chapters": 27, "abbrev": "利", "testament": "old"},
+        {"id": 4, "name": "民数记", "chapters": 36, "abbrev": "民", "testament": "old"},
+        {"id": 5, "name": "申命记", "chapters": 34, "abbrev": "申", "testament": "old"},
+        {"id": 6, "name": "约书亚记", "chapters": 24, "abbrev": "书", "testament": "old"},
+        {"id": 7, "name": "士师记", "chapters": 21, "abbrev": "士", "testament": "old"},
+        {"id": 8, "name": "路得记", "chapters": 4, "abbrev": "得", "testament": "old"},
+        {"id": 9, "name": "撒母耳记上", "chapters": 31, "abbrev": "撒上", "testament": "old"},
+        {"id": 10, "name": "撒母耳记下", "chapters": 24, "abbrev": "撒下", "testament": "old"},
+        {"id": 11, "name": "列王纪上", "chapters": 22, "abbrev": "王上", "testament": "old"},
+        {"id": 12, "name": "列王纪下", "chapters": 25, "abbrev": "王下", "testament": "old"},
+        {"id": 13, "name": "历代志上", "chapters": 29, "abbrev": "代上", "testament": "old"},
+        {"id": 14, "name": "历代志下", "chapters": 36, "abbrev": "代下", "testament": "old"},
+        {"id": 15, "name": "以斯拉记", "chapters": 10, "abbrev": "拉", "testament": "old"},
+        {"id": 16, "name": "尼希米记", "chapters": 13, "abbrev": "尼", "testament": "old"},
+        {"id": 17, "name": "以斯帖记", "chapters": 10, "abbrev": "斯", "testament": "old"},
+        {"id": 18, "name": "约伯记", "chapters": 42, "abbrev": "伯", "testament": "old"},
+        {"id": 19, "name": "诗篇", "chapters": 150, "abbrev": "诗", "testament": "old"},
+        {"id": 20, "name": "箴言", "chapters": 31, "abbrev": "箴", "testament": "old"},
+        {"id": 21, "name": "传道书", "chapters": 12, "abbrev": "传", "testament": "old"},
+        {"id": 22, "name": "雅歌", "chapters": 8, "abbrev": "雅", "testament": "old"},
+        {"id": 23, "name": "以赛亚书", "chapters": 66, "abbrev": "赛", "testament": "old"},
+        {"id": 24, "name": "耶利米书", "chapters": 52, "abbrev": "耶", "testament": "old"},
+        {"id": 25, "name": "耶利米哀歌", "chapters": 5, "abbrev": "哀", "testament": "old"},
+        {"id": 26, "name": "以西结书", "chapters": 48, "abbrev": "结", "testament": "old"},
+        {"id": 27, "name": "但以理书", "chapters": 12, "abbrev": "但", "testament": "old"},
+        {"id": 28, "name": "何西阿书", "chapters": 14, "abbrev": "何", "testament": "old"},
+        {"id": 29, "name": "约珥书", "chapters": 3, "abbrev": "珥", "testament": "old"},
+        {"id": 30, "name": "阿摩司书", "chapters": 9, "abbrev": "摩", "testament": "old"},
+        {"id": 31, "name": "俄巴底亚书", "chapters": 1, "abbrev": "俄", "testament": "old"},
+        {"id": 32, "name": "约拿书", "chapters": 4, "abbrev": "拿", "testament": "old"},
+        {"id": 33, "name": "弥迦书", "chapters": 7, "abbrev": "弥", "testament": "old"},
+        {"id": 34, "name": "那鸿书", "chapters": 3, "abbrev": "鸿", "testament": "old"},
+        {"id": 35, "name": "哈巴谷书", "chapters": 3, "abbrev": "哈", "testament": "old"},
+        {"id": 36, "name": "西番雅书", "chapters": 3, "abbrev": "番", "testament": "old"},
+        {"id": 37, "name": "哈该书", "chapters": 2, "abbrev": "该", "testament": "old"},
+        {"id": 38, "name": "撒迦利亚书", "chapters": 14, "abbrev": "亚", "testament": "old"},
+        {"id": 39, "name": "玛拉基书", "chapters": 4, "abbrev": "玛", "testament": "old"},
+        {"id": 40, "name": "马太福音", "chapters": 28, "abbrev": "太", "testament": "new"},
+        {"id": 41, "name": "马可福音", "chapters": 16, "abbrev": "可", "testament": "new"},
+        {"id": 42, "name": "路加福音", "chapters": 24, "abbrev": "路", "testament": "new"},
+        {"id": 43, "name": "约翰福音", "chapters": 21, "abbrev": "约", "testament": "new"},
+        {"id": 44, "name": "使徒行传", "chapters": 28, "abbrev": "徒", "testament": "new"},
+        {"id": 45, "name": "罗马书", "chapters": 16, "abbrev": "罗", "testament": "new"},
+        {"id": 46, "name": "哥林多前书", "chapters": 16, "abbrev": "林前", "testament": "new"},
+        {"id": 47, "name": "哥林多后书", "chapters": 13, "abbrev": "林后", "testament": "new"},
+        {"id": 48, "name": "加拉太书", "chapters": 6, "abbrev": "加", "testament": "new"},
+        {"id": 49, "name": "以弗所书", "chapters": 6, "abbrev": "弗", "testament": "new"},
+        {"id": 50, "name": "腓立比书", "chapters": 4, "abbrev": "腓", "testament": "new"},
+        {"id": 51, "name": "歌罗西书", "chapters": 4, "abbrev": "西", "testament": "new"},
+        {"id": 52, "name": "帖撒罗尼迦前书", "chapters": 5, "abbrev": "帖前", "testament": "new"},
+        {"id": 53, "name": "帖撒罗尼迦后书", "chapters": 3, "abbrev": "帖后", "testament": "new"},
+        {"id": 54, "name": "提摩太前书", "chapters": 6, "abbrev": "提前", "testament": "new"},
+        {"id": 55, "name": "提摩太后书", "chapters": 4, "abbrev": "提后", "testament": "new"},
+        {"id": 56, "name": "提多书", "chapters": 3, "abbrev": "多", "testament": "new"},
+        {"id": 57, "name": "腓利门书", "chapters": 1, "abbrev": "门", "testament": "new"},
+        {"id": 58, "name": "希伯来书", "chapters": 13, "abbrev": "来", "testament": "new"},
+        {"id": 59, "name": "雅各书", "chapters": 5, "abbrev": "雅", "testament": "new"},
+        {"id": 60, "name": "彼得前书", "chapters": 5, "abbrev": "彼前", "testament": "new"},
+        {"id": 61, "name": "彼得后书", "chapters": 3, "abbrev": "彼后", "testament": "new"},
+        {"id": 62, "name": "约翰一书", "chapters": 5, "abbrev": "约一", "testament": "new"},
+        {"id": 63, "name": "约翰二书", "chapters": 1, "abbrev": "约二", "testament": "new"},
+        {"id": 64, "name": "约翰三书", "chapters": 1, "abbrev": "约三", "testament": "new"},
+        {"id": 65, "name": "犹大书", "chapters": 1, "abbrev": "犹", "testament": "new"},
+        {"id": 66, "name": "启示录", "chapters": 22, "abbrev": "启", "testament": "new"}
+    ],
+    "categories": {
+        "old": {
+            "pentateuch": {"name": "摩西五经", "books": [1,2,3,4,5]},
+            "history": {"name": "历史书", "books": [6,7,8,9,10,11,12,13,14,15,16,17]},
+            "wisdom": {"name": "诗歌智慧书", "books": [18,19,20,21,22]},
+            "prophets-major": {"name": "大先知书", "books": [23,24,25,26,27]},
+            "prophets-minor": {"name": "小先知书", "books": [28,29,30,31,32,33,34,35,36,37,38,39]}
+        },
+        "new": {
+            "gospels": {"name": "四福音书", "books": [40,41,42,43]},
+            "history-letters": {"name": "历史书信", "books": [44]},
+            "paul-letters": {"name": "保罗书信", "books": [45,46,47,48,49,50,51,52,53,54,55,56,57]},
+            "general-letters": {"name": "一般书信", "books": [58,59,60,61,62,63,64,65]},
+            "apocalypse": {"name": "启示文学", "books": [66]}
+        }
+    },
+    "encyclopedia": {
+        "创世记": {
+            "title": "创世记",
+            "author": "摩西",
+            "date": "约公元前1446年",
+            "overview": "创世记是圣经的第一卷，记载了上帝创造世界、人类的起源与堕落，以及以色列民族的祖先亚伯拉罕、以撒、雅各和约瑟的故事。本书揭示了上帝创造的完美、人类的堕落、上帝的救赎计划，以及祂与亚伯拉罕所立的应许之约。",
+            "keyThemes": ["创造", "堕落", "应许", "救赎", "信心", "盟约"],
+            "outline": [
+                "1-11章：创造与人类早期历史",
+                "12-25章：亚伯拉罕的故事与应许",
+                "25-36章：以撒和雅各的生平",
+                "37-50章：约瑟在埃及的经历"
+            ],
+            "keyCharacters": ["亚当", "夏娃", "挪亚", "亚伯拉罕", "以撒", "雅各", "约瑟"]
+        },
+        "出埃及记": {
+            "title": "出埃及记",
+            "author": "摩西",
+            "date": "约公元前1446年",
+            "overview": "出埃及记记载了以色列人在埃及为奴四百多年后，上帝通过摩西带领他们出埃及、过红海、在西奈山与上帝立约、颁布十诫和建造会幕的历史。本书展现了上帝的救赎大能和祂与以色列人所立的西奈之约。",
+            "keyThemes": ["救赎", "约", "十诫", "会幕", "神迹", "顺服"],
+            "outline": [
+                "1-12章：以色列人在埃及与十灾",
+                "13-18章：出埃及与旷野旅程",
+                "19-24章：西奈山立约与十诫",
+                "25-40章：建造会幕"
+            ],
+            "keyCharacters": ["摩西", "亚伦", "法老", "约书亚"]
+        },
+        "利未记": {
+            "title": "利未记",
+            "author": "摩西",
+            "date": "约公元前1446年",
+            "overview": "利未记是一本关于圣洁的书，详细记载了以色列人的祭祀条例、洁净律法和节期规定。本书教导人如何与圣洁的上帝相处，强调圣洁的重要性和献祭制度的意义。",
+            "keyThemes": ["圣洁", "祭祀", "洁净", "安息日", "节期", "祭司"],
+            "outline": [
+                "1-7章：各种献祭条例",
+                "8-10章：祭司的职分与奉献",
+                "11-15章：洁净与不洁净的规定",
+                "16章：赎罪日",
+                "17-27章：圣洁的生活与奉献"
+            ],
+            "keyCharacters": ["摩西", "亚伦", "拿答", "亚比户"]
+        },
+        "民数记": {
+            "title": "民数记",
+            "author": "摩西",
+            "date": "约公元前1445年",
+            "overview": "民数记记载了以色列人在旷野漂流的四十年历史，包括两次人口普查、摩西派遣探子窥探迦南地、巴兰的故事，以及准备进入应许之地的预备。本书强调顺服的重要性和信心的考验。",
+            "keyThemes": ["顺服", "信心", "背逆", "引导", "预备", "数字"],
+            "outline": [
+                "1-10章：第一次人口普查与准备",
+                "11-20章：旷野漂流的事件",
+                "21-36章：接近应许之地"
+            ],
+            "keyCharacters": ["摩西", "亚伦", "迦勒", "约书亚", "巴兰"]
+        },
+        "申命记": {
+            "title": "申命记",
+            "author": "摩西",
+            "date": "约公元前1406年",
+            "overview": "申命记是摩西在以色列人进入迦南前的最后讲话，重申十诫和律法，教导以色列人要全心爱上帝，遵守祂的诫命。本书强调顺从的祝福和悖逆的咒诅。",
+            "keyThemes": ["律法", "顺服", "祝福与咒诅", "爱上帝", "盟约", "教导"],
+            "outline": [
+                "1-4章：回顾历史与劝勉",
+                "5-26章：重申律法",
+                "27-30章：祝福与咒诅",
+                "31-34章：摩西的离世"
+            ],
+            "keyCharacters": ["摩西", "约书亚"]
+        },
+        "马太福音": {
+            "title": "马太福音",
+            "author": "马太",
+            "date": "约公元50-60年",
+            "overview": "马太福音是新约四福音之一，强调耶稣是弥赛亚，是大卫的后裔，记载了耶稣的生平、教导、神迹、受难和复活。本书特别针对犹太人读者，证明耶稣就是旧约所预言的弥赛亚。",
+            "keyThemes": ["弥赛亚", "天国", "门徒训练", "耶稣的身份", "救赎", "信心"],
+            "outline": [
+                "1-2章：耶稣的降生与童年",
+                "3-7章：耶稣的公开教导（登山宝训）",
+                "8-25章：耶稣的事工与神迹",
+                "26-28章：受难、复活与大使命"
+            ],
+            "keyCharacters": ["耶稣", "门徒", "法利赛人", "彼拉多"]
+        },
+        "马可福音": {
+            "title": "马可福音",
+            "author": "马可",
+            "date": "约公元60-70年",
+            "overview": "马可福音是四福音中最短的一卷，以行动为导向，强调耶稣是仆人救主，记载了耶稣的神迹和权能。本书生动地描绘了耶稣的事工，强调祂的权柄和救赎的工作。",
+            "keyThemes": ["仆人", "权能", "信心", "十字架", "复活", "门徒"],
+            "outline": [
+                "1-8章：加利利的事工",
+                "9-16章：走向十字架与复活"
+            ],
+            "keyCharacters": ["耶稣", "门徒", "彼得"]
+        },
+        "路加福音": {
+            "title": "路加福音",
+            "author": "路加",
+            "date": "约公元60-62年",
+            "overview": "路加福音是写给外邦人的福音书，强调耶稣是救主，关心穷人和被边缘化的人，记载了耶稣的降生、事工、受难和复活。本书详细描述了耶稣的人性和祂对所有人的爱。",
+            "keyThemes": ["救主", "怜悯", "贫穷", "悔改", "盼望", "好消息"],
+            "outline": [
+                "1-2章：耶稣的降生与童年",
+                "3-9章：耶稣的公开事工",
+                "10-24章：走向耶路撒冷与复活"
+            ],
+            "keyCharacters": ["耶稣", "马利亚", "撒该", "抹大拉的马利亚"]
+        },
+        "约翰福音": {
+            "title": "约翰福音",
+            "author": "约翰",
+            "date": "约公元90-100年",
+            "overview": "约翰福音强调耶稣是道成肉身的上帝，记载了耶稣的七个神迹和七个\"我是\"的宣告，目的是叫人信耶稣得永生。本书深刻揭示了耶稣的神性和救赎的意义。",
+            "keyThemes": ["道成肉身", "永生", "信心", "爱", "见证", "复活"],
+            "outline": [
+                "1-12章：耶稣的公开事工",
+                "13-17章：最后的教导与祷告",
+                "18-21章：受难、复活与显现"
+            ],
+            "keyCharacters": ["耶稣", "约翰", "彼得", "马大", "拉撒路"]
+        },
+        "使徒行传": {
+            "title": "使徒行传",
+            "author": "路加",
+            "date": "约公元62年",
+            "overview": "使徒行传记载了早期教会的建立和扩展，从五旬节圣灵降临开始，到保罗的三次旅行布道，展现了圣灵的工作和福音从耶路撒冷传到罗马的过程。",
+            "keyThemes": ["圣灵", "教会", "传福音", "见证", "扩展", "勇气"],
+            "outline": [
+                "1-7章：耶路撒冷教会的建立",
+                "8-12章：教会扩展到撒玛利亚",
+                "13-28章：保罗的宣教旅程"
+            ],
+            "keyCharacters": ["彼得", "保罗", "巴拿巴", "司提反"]
+        },
+        "罗马书": {
+            "title": "罗马书",
+            "author": "保罗",
+            "date": "约公元57年",
+            "overview": "罗马书是保罗写给罗马教会的书信，系统阐述了基督教的核心教义：因信称义、罪与救恩、圣灵的工作和基督徒的生活。本书是新约中最重要的教义著作之一。",
+            "keyThemes": ["因信称义", "罪", "救赎", "圣灵", "合一", "顺服"],
+            "outline": [
+                "1-4章：因信称义的教义",
+                "5-8章：在基督里的生命",
+                "9-11章：以色列与救恩",
+                "12-16章：基督徒的生活实践"
+            ],
+            "keyCharacters": ["保罗"]
+        },
+        "哥林多前书": {
+            "title": "哥林多前书",
+            "author": "保罗",
+            "date": "约公元55年",
+            "overview": "哥林多前书是保罗写给哥林多教会的书信，针对教会中的问题：分裂、婚姻、偶像、属灵恩赐等，教导基督徒应当如何在基督里合一，过圣洁的

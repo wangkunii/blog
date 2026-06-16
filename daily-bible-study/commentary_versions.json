@@ -1,0 +1,20 @@
+{
+  "versions": [
+    "精读本圣经注释",
+    "基督徒文摘解经系列",
+    "刘道顺从救赎史的观点看圣经",
+    "综合解读"
+  ],
+  "encyclopediaVersions": [
+    "证主圣经百科全书",
+    "简明圣经史地图解",
+    "圣经语汇辞典"
+  ],
+  "bibleVersions": [
+    "和合本",
+    "KJV"
+  ],
+  "defaultCommentary": "精读本圣经注释",
+  "defaultEncyclopedia": "证主圣经百科全书",
+  "defaultBible": "和合本"
+}

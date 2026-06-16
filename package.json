@@ -1,0 +1,12 @@
+{
+  "name": "linqian-blog",
+  "version": "1.0.0",
+  "description": "林前博客 - 基督教门徒训练资源平台",
+  "scripts": {
+    "build": "echo 'Build completed successfully'",
+    "dev": "python -m http.server 8000"
+  },
+  "keywords": ["christian", "blog", "discipleship"],
+  "author": "林前先生",
+  "license": "MIT"
+}

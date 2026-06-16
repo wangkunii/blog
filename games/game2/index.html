@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>游戏2：初信栽培系列 - 闯关游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">← 返回首页</a>
+        
+        <h1 class="game-title">🎮 游戏2：初信栽培系列</h1>
+        
+        <div id="start-screen" class="screen">
+            <div class="game-intro">
+                <h2>欢迎开始闯关</h2>
+                <p>本游戏包含 <span id="total-questions">0</span> 道题目</p>
+                <p class="tip">准备好测试你的知识了吗？</p>
+                <button id="start-btn" class="btn btn-primary">开始游戏</button>
+            </div>
+        </div>
+        
+        <div id="game-screen" class="screen hidden">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="question-counter">
+                第 <span id="current-question">1</span> / <span id="total">0</span> 题
+            </div>
+            <div class="question-box">
+                <h2 id="question-text" class="question-text"></h2>
+                <div id="options" class="options"></div>
+            </div>
+            <div id="feedback" class="feedback hidden"></div>
+        </div>
+        
+        <div id="result-screen" class="screen hidden">
+            <h2>游戏结束</h2>
+            <div class="score-display">
+                <div class="score">得分：<span id="score">0</span> / <span id="total-questions-result">0</span></div>
+                <div class="percentage"><span id="percentage">0</span>%</div>
+            </div>
+            <div id="encouragement" class="encouragement"></div>
+            <button id="restart-btn" class="btn btn-primary">重新开始</button>
+            <a href="../index.html" class="btn btn-secondary">返回首页</a>
+        </div>
+    </div>
+    
+    <script src="questions.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

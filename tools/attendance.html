@@ -1,0 +1,2880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QiHi点名系统</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f8f9fa;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(52, 152, 219, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(46, 204, 113, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(231, 76, 60, 0.1) 0%, transparent 50%);
+            color: #333;
+            line-height: 1.6;
+            animation: pageFadeIn 1s ease-in-out;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 40" fill="none" stroke="%238B4513" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="16" y1="2" x2="16" y2="38"></line><line x1="8" y1="16" x2="24" y2="16"></line></svg>') 16 20, auto;
+            overflow-x: hidden;
+        }
+
+        /* 链接和按钮的鼠标样式 */
+        button, input[type="file"], input[type="number"] {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 40" fill="none" stroke="%23A0522D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="16" y1="2" x2="16" y2="38"></line><line x1="8" y1="16" x2="24" y2="16"></line></svg>') 16 20, pointer;
+        }
+
+        /* 名字元素样式 */
+        .name-element {
+            position: fixed;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: nameFloat 10s ease-in-out infinite;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            max-width: 120px;
+            backdrop-filter: blur(8px);
+        }
+
+        /* 名字飘落样式 */
+        .name-fall {
+            position: fixed;
+            top: -150px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.98);
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: nameFall ease-in-out infinite;
+            pointer-events: none;
+            max-width: 120px;
+            backdrop-filter: blur(10px);
+            transform-origin: center;
+        }
+
+        /* 不同形状的名字元素 */
+        .name-fall.shape-1 {
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            background-color: rgba(240, 248, 255, 0.98);
+            border-color: #add8e6;
+        }
+
+        .name-fall.shape-2 {
+            border-radius: 8px;
+            background-color: rgba(255, 248, 220, 0.98);
+            border-color: #ffd700;
+        }
+
+        .name-fall.shape-3 {
+            border-radius: 50% 0 50% 0;
+            background-color: rgba(240, 255, 240, 0.98);
+            border-color: #90ee90;
+        }
+
+        .name-fall.shape-4 {
+            border-radius: 15px 5px 15px 5px;
+            background-color: rgba(255, 240, 245, 0.98);
+            border-color: #ffb6c1;
+        }
+
+        .name-fall.shape-5 {
+            border-radius: 20px 20px 5px 5px;
+            background-color: rgba(252, 249, 232, 0.98);
+            border-color: #f39c12;
+        }
+
+        .name-fall.shape-6 {
+            border-radius: 5px 20px 5px 20px;
+            background-color: rgba(232, 245, 252, 0.98);
+            border-color: #3498db;
+        }
+
+        .name-fall.shape-7 {
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            background-color: rgba(255, 250, 205, 0.98);
+            border-color: #ffeb3b;
+        }
+
+        .name-fall.shape-8 {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            background-color: rgba(221, 160, 221, 0.98);
+            border-color: #da70d6;
+        }
+
+        .name-fall.shape-9 {
+            border-radius: 0 100% 100% 0 / 0 50% 50% 0;
+            background-color: rgba(255, 182, 193, 0.98);
+            border-color: #ff69b4;
+        }
+
+        .name-fall.shape-10 {
+            border-radius: 100% 0 100% 0 / 50% 0 50% 0;
+            background-color: rgba(176, 224, 230, 0.98);
+            border-color: #4682b4;
+        }
+
+        .name-fall.shape-11 {
+            border-radius: 25px 10px 25px 10px / 10px 25px 10px 25px;
+            background-color: rgba(240, 128, 128, 0.98);
+            border-color: #cd5c5c;
+        }
+
+        .name-fall.shape-12 {
+            border-radius: 15px 5px 5px 15px / 5px 15px 15px 5px;
+            background-color: rgba(152, 251, 152, 0.98);
+            border-color: #90ee90;
+        }
+
+        @keyframes nameFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg) scale(0.8) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                transform: translateY(50px) rotate(5deg) scale(1) translateX(20px);
+                opacity: 1;
+            }
+            30% {
+                transform: translateY(20vh) rotate(-5deg) scale(1.05) translateX(-20px);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(40vh) rotate(3deg) scale(1) translateX(15px);
+                opacity: 1;
+            }
+            70% {
+                transform: translateY(60vh) rotate(-3deg) scale(0.95) translateX(-15px);
+                opacity: 1;
+            }
+            90% {
+                transform: translateY(80vh) rotate(2deg) scale(0.9) translateX(10px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(0deg) scale(0.8) translateX(0);
+                opacity: 0;
+            }
+        }
+
+        .name-cartoon {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        .name-text {
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        @keyframes nameFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-10px) rotate(2deg);
+            }
+            50% {
+                transform: translateY(0) rotate(0deg);
+            }
+            75% {
+                transform: translateY(-5px) rotate(-2deg);
+            }
+        }
+
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.85);
+            background-image: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,249,250,0.95) 100%);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            min-height: auto;
+        }
+
+        /* 头部样式 */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e8f4f8;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        /* 卡通小绵羊 */
+        .sheep {
+            width: 50px;
+            height: 50px;
+            margin: 0 20px;
+            font-size: 40px;
+            line-height: 50px;
+            text-align: center;
+            animation: sheepBounce 2s ease-in-out infinite;
+        }
+
+        .sheep::before {
+            content: '🐑';
+        }
+
+        @keyframes sheepBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .home-link {
+            animation: sheepBounce 2s ease-in-out infinite;
+            border-radius: 40px 40px 45px 45px;
+            width: 50px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ff6b6b 0%, #d63031 100%);
+            color: white !important;
+            box-shadow: inset -3px -3px 6px rgba(0,0,0,0.2), inset 3px 3px 6px rgba(255,255,255,0.3);
+            position: relative;
+            margin-top: 15px;
+            margin-left: 10px;
+        }
+
+        .home-link::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 35%;
+            transform: rotate(-30deg);
+            width: 16px;
+            height: 12px;
+            background: linear-gradient(180deg, #558b2f 0%, #33691e 100%);
+            border-radius: 50% 0 50% 50%;
+        }
+
+        .home-link::after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 40%;
+            width: 4px;
+            height: 8px;
+            background: linear-gradient(180deg, #8b4513 0%, #5d3a1a 100%);
+            border-radius: 2px;
+        }
+
+        .home-link:hover {
+            animation-play-state: paused;
+            transform: scale(1.1);
+            box-shadow: inset -4px -4px 10px rgba(0,0,0,0.2), inset 4px 4px 10px rgba(255,255,255,0.3);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #2c3e50;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            letter-spacing: 2px;
+        }
+
+        .main-title {
+            animation: titleAnimation 2s ease-in-out;
+            position: relative;
+        }
+
+        @keyframes titleAnimation {
+            0% {
+                transform: scale(0.8) translateY(-20px);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1) translateY(0);
+                opacity: 1;
+            }
+            75% {
+                transform: scale(0.95) translateY(5px);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* 主要内容区域 */
+        .main-content {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* 左侧：名单管理 */
+        .list-section {
+            flex: 1;
+            background-color: #f9f9f9;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            animation: sectionSlideIn 0.8s ease-out 0.3s both;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .list-section h2 {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+            animation: fadeInUp 0.6s ease-out 0.6s both;
+        }
+
+        .import-section {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-radius: 8px;
+            border: 1px solid #d1ecf1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .import-subsection,
+        .add-name-subsection {
+            margin-bottom: 12px;
+        }
+
+        .import-subsection label,
+        .add-name-subsection label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #34495e;
+            font-size: 14px;
+        }
+
+        .add-name-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        #add-name-input {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        #add-name-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .add-name-button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3498db;
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-name-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 快速操作按钮 */
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .quick-button {
+            flex: 1;
+            min-width: 90px;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            color: #34495e;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-button:hover {
+            background-color: #e8f4f8;
+            border-color: #3498db;
+            transform: translateY(-1px);
+        }
+
+        .import-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        #excel-upload {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        #excel-upload:hover {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .current-group {
+            margin-top: 15px;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .current-group h3 {
+            font-size: 16px;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+
+        #name-list {
+            list-style: none;
+            max-height: 100px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background-color: white;
+            min-height: 100px;
+        }
+
+        #name-list li {
+            padding: 8px 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        #name-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* 右侧：抽取设置和结果 */
+        .draw-section {
+            flex: 1;
+            background-color: #f9f9f9;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            animation: sectionSlideIn 0.8s ease-out 0.5s both;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .draw-section h2 {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+            animation: fadeInUp 0.6s ease-out 0.8s both;
+        }
+
+        /* 抽取设置 */
+        .draw-settings {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-radius: 6px;
+        }
+
+        .setting-item {
+            margin-bottom: 15px;
+        }
+
+        .setting-item label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #34495e;
+            font-size: 14px;
+        }
+
+        /* 数量控制 */
+        .count-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #draw-count {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .count-button {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3498db;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .count-button:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .count-button.decrease {
+            background-color: #e74c3c;
+        }
+
+        .count-button.decrease:hover {
+            background-color: #c0392b;
+        }
+
+        #draw-count:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .draw-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .draw-button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .draw-button:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .draw-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.4s ease;
+        }
+
+        .draw-button:hover::before {
+            left: 100%;
+        }
+
+        .draw-button:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        #start-draw {
+            background-color: #3498db;
+            color: white;
+        }
+
+        #start-draw:hover {
+            background-color: #2980b9;
+        }
+
+        .stop-button {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .stop-button:hover {
+            background-color: #c0392b;
+        }
+
+        /* 抽取结果 */
+        .draw-result {
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+
+        /* 历史记录区域 */
+        .history-section {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-section h3 {
+            font-size: 14px;
+            color: #34495e;
+            margin-bottom: 12px;
+        }
+
+        #history-list {
+            list-style: none;
+            max-height: 100px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background-color: white;
+            flex: 1;
+            min-height: 0;
+        }
+
+        #history-list li {
+            padding: 6px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        #history-list li:last-child {
+            border-bottom: none;
+        }
+
+        #history-list li::before {
+            content: '•';
+            color: #3498db;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .draw-result h3 {
+            font-size: 16px;
+            color: #34495e;
+            margin-bottom: 15px;
+        }
+
+        #result-display {
+            min-height: 100px;
+            padding: 12px;
+            border: 2px solid #3498db;
+            border-radius: 6px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        /* 多个结果样式 */
+        .multiple-results {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .result-name {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background-color: rgba(240, 240, 240, 0.5);
+        }
+
+        .name-separator {
+            color: #95a5a6;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        @media (max-width: 768px) {
+            .multiple-results {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .name-separator {
+                display: none;
+            }
+        }
+
+        /* 底部样式 */
+        .footer {
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 20px;
+            border-top: 2px solid #e8f4f8;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .footer p {
+            font-size: 14px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes sectionSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pulse {
+            animation: pulse 0.5s infinite;
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* 基督教装饰元素 */
+        .christian-decoration {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: float 6s ease-in-out infinite;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .christian-decoration.top-left {
+            top: 20px;
+            left: 80px;
+            animation-delay: 0s;
+        }
+
+        .christian-decoration.top-right {
+            top: 20px;
+            right: 20px;
+            animation-delay: 2s;
+        }
+
+        .christian-decoration.bottom-left {
+            bottom: 20px;
+            left: 20px;
+            animation-delay: 4s;
+        }
+
+        .christian-decoration.bottom-right {
+            bottom: 20px;
+            right: 20px;
+            animation-delay: 1s;
+        }
+
+        /* 小十字架 */
+        .small-cross {
+            width: 30px;
+            height: 30px;
+            position: relative;
+        }
+
+        .small-cross::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 25%;
+            width: 50%;
+            height: 4px;
+            background-color: #e74c3c;
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+
+        .small-cross::after {
+            content: '';
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            width: 4px;
+            height: 50%;
+            background-color: #e74c3c;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* 爱心 */
+        .heart {
+            width: 30px;
+            height: 30px;
+            position: relative;
+            transform: rotate(-45deg);
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -15px;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: 15px;
+        }
+
+        .heart::before {
+            background-color: #e74c3c;
+        }
+
+        .heart::after {
+            background-color: #e74c3c;
+        }
+
+        /* 耶稣鱼 */
+        .jesus-fish {
+            width: 40px;
+            height: 25px;
+            border: 3px solid #3498db;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: relative;
+            transform: rotate(45deg);
+        }
+
+        .jesus-fish::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 50%;
+            height: 3px;
+            background-color: #3498db;
+            transform: translateY(-50%);
+        }
+
+        /* 鸽子 - 象征圣灵 */
+        .dove {
+            width: 35px;
+            height: 28px;
+            position: relative;
+            background-color: #ffffff;
+            border-radius: 50% 50% 45% 45%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .dove::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            right: -8px;
+            width: 15px;
+            height: 10px;
+            border: 3px solid #ffffff;
+            border-left: none;
+            border-radius: 0 50% 50% 0;
+        }
+
+        .dove::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+        }
+
+        /* 皇冠 - 象征基督为王 */
+        .crown {
+            width: 36px;
+            height: 28px;
+            position: relative;
+        }
+
+        .crown::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 3px;
+            width: 30px;
+            height: 6px;
+            background: linear-gradient(to bottom, #f1c40f, #f39c12);
+            border-radius: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .crown::after {
+            content: '♛';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 22px;
+            color: #f1c40f;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* 火焰 - 象征圣灵的火 */
+        .flame {
+            width: 22px;
+            height: 32px;
+            position: relative;
+            background: linear-gradient(to top, #c0392b, #e74c3c, #f39c12, #f1c40f);
+            border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+            animation: flicker 0.3s ease-in-out infinite alternate;
+        }
+
+        .flame::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: -3px;
+            width: 10px;
+            height: 18px;
+            background: linear-gradient(to top, #e74c3c, #f39c12);
+            border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+            animation: flicker 0.4s ease-in-out infinite alternate;
+            animation-delay: 0.1s;
+        }
+
+        .flame::after {
+            content: '';
+            position: absolute;
+            top: 20%;
+            right: -2px;
+            width: 8px;
+            height: 15px;
+            background: linear-gradient(to top, #f39c12, #f1c40f);
+            border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+            animation: flicker 0.35s ease-in-out infinite alternate;
+            animation-delay: 0.15s;
+        }
+
+        @keyframes flicker {
+            0% {
+                transform: scaleY(1) scaleX(1);
+            }
+            100% {
+                transform: scaleY(1.1) scaleX(0.9);
+            }
+        }
+
+        /* 角落装饰元素 */
+        .corner-decoration {
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: float 6s ease-in-out infinite;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .corner-decoration.top-left {
+            top: 10px;
+            left: 10px;
+            animation-delay: 0s;
+        }
+
+        .corner-decoration.top-right {
+            top: 10px;
+            right: 10px;
+            animation-delay: 2s;
+        }
+
+        .corner-decoration.bottom-left {
+            bottom: 10px;
+            left: 10px;
+            animation-delay: 4s;
+        }
+
+        .corner-decoration.bottom-right {
+            bottom: 10px;
+            right: 10px;
+            animation-delay: 1s;
+        }
+
+        /* 标题装饰元素 */
+        .title-decoration {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 8px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* 浮动动画 */
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-10px) rotate(5deg);
+            }
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        /* 确保容器有相对定位 */
+        .container {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 角落装饰元素 -->
+        <div class="corner-decoration top-left"><div class="small-cross"></div></div>
+        <div class="corner-decoration top-right"><div class="heart"></div></div>
+        <div class="corner-decoration bottom-left"><div class="jesus-fish"></div></div>
+        <div class="corner-decoration bottom-right"><div class="small-cross"></div></div>
+        
+        <!-- 基督教元素头部 -->
+        <header class="header">
+            <div style="display: flex; align-items: center; gap: 40px; width: 100%; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <a href="../index.html" class="home-link" style="text-decoration: none; font-size: 12px; transition: transform 0.3s;">返回首页</a>
+                    <div class="sheep"></div>
+                    <div id="current-date-time" style="font-size: 14px; color: #666; text-align: left;"></div>
+                </div>
+                <h1 class="main-title"><span class="title-decoration"><div class="small-cross"></div></span>QiHi点名系统<span class="title-decoration"><div class="heart"></div></span></h1>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="text-align: right;">
+                    <div id="countdown" style="font-size: 14px; color: #e74c3c;"></div>
+                    <div style="margin-top: 5px;">
+                        <input type="number" id="countdown-minutes" placeholder="分钟" min="1" max="60" style="width: 60px; padding: 3px; font-size: 12px;">
+                        <button onclick="startCountdown()" style="padding: 3px 8px; font-size: 12px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">开始</button>
+                        <button onclick="stopCountdown()" style="padding: 3px 8px; font-size: 12px; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">停止</button>
+                    </div>
+                    <div style="margin-top: 5px; font-size: 12px; color: #666;">
+                        <input type="file" id="hymn-file" accept=".mp3,.wav,.ogg" multiple style="font-size: 11px;">
+                        <span style="margin-left: 5px;">选择本地诗歌</span>
+                    </div>
+                    <div id="hymn-status" style="margin-top: 3px; font-size: 11px; color: #999;">未选择诗歌文件</div>
+                </div>
+                    <div class="sheep"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要功能区域 -->
+        <main class="main-content">
+            <!-- 左侧：名单管理 -->
+            <section class="list-section">
+                <h2><span class="title-decoration"><div class="dove"></div></span>名单管理</h2>
+                
+                <!-- 导入和添加区域 -->
+                <div class="import-section">
+                    <!-- Excel导入 -->
+                    <div class="import-subsection">
+                        <label for="excel-upload">Excel导入名单：</label>
+                        <input type="file" id="excel-upload" accept=".xlsx,.xls">
+                    </div>
+
+                    <!-- 快速操作 -->
+                    <div class="quick-actions">
+                        <button class="quick-button" onclick="addTestData()">添加测试数据</button>
+                        <button class="quick-button" onclick="clearNameList()">清空名单</button>
+                        <button class="quick-button" onclick="saveNameList()">保存名单</button>
+                    </div>
+
+                    <!-- 临时添加名字 -->
+                    <div class="add-name-subsection">
+                        <label for="add-name-input">临时添加名字：</label>
+                        <div class="add-name-input-group">
+                            <input type="text" id="add-name-input" placeholder="请输入名字">
+                            <button class="add-name-button" onclick="addSingleName()">添加</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 名单显示 -->
+                <div class="current-group">
+                    <h3>当前名单<span class="title-decoration"><div class="flame"></div></span></h3>
+                    <ul id="name-list"></ul>
+                </div>
+
+                <!-- 随机经文卡片 -->
+                <div id="bible-verse" style="margin-top: 15px; padding: 12px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #e8f4f8;">
+                    <h4 style="font-size: 14px; color: #3498db; margin-bottom: 8px;">今日经文</h4>
+                    <div id="verse-content" style="font-size: 13px; color: #333; font-style: italic;"></div>
+                </div>
+            </section>
+
+            <!-- 右侧：抽取设置和结果 -->
+            <section class="draw-section">
+                <h2>随机抽取<span class="title-decoration"><div class="crown"></div></span></h2>
+                
+                <!-- 抽取设置 -->
+                <div class="draw-settings">
+                    <div class="setting-item">
+                        <label>抽取方式：</label>
+                        <div style="display: flex; gap: 10px; margin-top: 8px;">
+                            <button id="group-draw-button" class="draw-button" style="flex: 1; background-color: #2ecc71;">按组抽取</button>
+                            <button id="random-draw-button" class="draw-button" style="flex: 1; background-color: #3498db;">随机抽取</button>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label for="draw-count">抽取人数：</label>
+                        <div class="count-control">
+                            <button class="count-button decrease" onclick="adjustDrawCount(-1)">-</button>
+                            <input type="number" id="draw-count" min="1" value="1">
+                            <button class="count-button increase" onclick="adjustDrawCount(1)">+</button>
+                        </div>
+                    </div>
+                    <div class="draw-controls">
+                        <button id="start-draw" class="draw-button">开始抽取</button>
+                        <button id="stop-draw" class="draw-button stop-button">结束抽取</button>
+                    </div>
+                </div>
+
+                <!-- 抽取结果 -->
+                <div class="draw-result">
+                    <h3>抽取结果<span class="title-decoration"><div class="jesus-fish"></div></span></h3>
+                    <div id="result-display"></div>
+                </div>
+
+                <!-- 历史记录 -->
+                <div class="history-section">
+                    <h3>最近抽取记录</h3>
+                    <ul id="history-list"></ul>
+                </div>
+            </section>
+        </main>
+
+        <!-- 底部信息 -->
+        <footer class="footer">
+            <p><span class="title-decoration"><div class="dove"></div></span>以马内利<span class="title-decoration"><div class="crown"></div></span></p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        // 全局变量
+        let groups = {}; // 分组数据结构，格式：{ 'A组': ['张三', '李四'], 'B组': ['王五', '赵六'], ... }
+        let nameList = []; // 所有名字的列表，用于飘落效果
+        let isDrawing = false;
+        let drawInterval = null;
+        let currentDrawCount = 1;
+        let drawHistory = [];
+        let totalDraws = 0;
+        let todayDraws = 0;
+        let drawMode = 'group'; // 抽取方式：'group' 按组抽取, 'random' 随机抽取
+
+        // DOM 元素
+        const excelUpload = document.getElementById('excel-upload');
+        const nameListElement = document.getElementById('name-list');
+        const drawCountInput = document.getElementById('draw-count');
+        const startDrawButton = document.getElementById('start-draw');
+        const stopDrawButton = document.getElementById('stop-draw');
+        const resultDisplay = document.getElementById('result-display');
+        const historyListElement = document.getElementById('history-list');
+
+        // 初始化
+        function init() {
+            // 绑定事件监听器
+            bindEventListeners();
+            
+            // 加载数据
+            loadNameList();
+            loadHistoryData();
+            
+            // 初始化界面
+            updateNameListDisplay();
+            updateResultDisplay();
+            updateHistoryDisplay();
+        }
+
+        // 绑定事件监听器
+        function bindEventListeners() {
+            // Excel 导入
+            if (excelUpload) {
+                excelUpload.addEventListener('change', handleExcelUpload);
+            }
+            
+            // 抽取人数输入
+            if (drawCountInput) {
+                drawCountInput.addEventListener('change', handleDrawCountChange);
+            }
+            
+            // 开始抽取
+            if (startDrawButton) {
+                startDrawButton.addEventListener('click', startDraw);
+            }
+            
+            // 结束抽取
+            if (stopDrawButton) {
+                stopDrawButton.addEventListener('click', stopDraw);
+            }
+            
+            // 按组抽取按钮
+            const groupDrawButton = document.getElementById('group-draw-button');
+            if (groupDrawButton) {
+                // 添加鼠标悬停效果
+                groupDrawButton.style.cursor = 'url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%238B4513\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z\"></path></svg>") 12 12, pointer';
+                
+                groupDrawButton.addEventListener('click', function() {
+                    drawMode = 'group';
+                    // 添加视觉标记
+                    this.style.backgroundColor = '#27ae60';
+                    this.style.border = '2px solid #27ae60';
+                    this.style.boxShadow = '0 0 10px rgba(39, 174, 96, 0.3)';
+                    this.style.fontWeight = 'bold';
+                    
+                    // 显示小绵羊图标
+                    this.innerHTML = '按组抽取 🐑';
+                    
+                    const randomButton = document.getElementById('random-draw-button');
+                    if (randomButton) {
+                        randomButton.style.backgroundColor = '#3498db';
+                        randomButton.style.border = '1px solid #ddd';
+                        randomButton.style.boxShadow = 'none';
+                        randomButton.style.fontWeight = 'normal';
+                        randomButton.innerHTML = '随机抽取';
+                    }
+                    alert('已切换到按组抽取模式');
+                });
+            }
+            
+            // 随机抽取按钮
+            const randomDrawButton = document.getElementById('random-draw-button');
+            if (randomDrawButton) {
+                // 添加鼠标悬停效果
+                randomDrawButton.style.cursor = 'url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%238B4513\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z\"></path></svg>") 12 12, pointer';
+                
+                randomDrawButton.addEventListener('click', function() {
+                    drawMode = 'random';
+                    // 添加视觉标记
+                    this.style.backgroundColor = '#2980b9';
+                    this.style.border = '2px solid #2980b9';
+                    this.style.boxShadow = '0 0 10px rgba(41, 128, 185, 0.3)';
+                    this.style.fontWeight = 'bold';
+                    
+                    // 显示小绵羊图标
+                    this.innerHTML = '随机抽取 🐑';
+                    
+                    const groupButton = document.getElementById('group-draw-button');
+                    if (groupButton) {
+                        groupButton.style.backgroundColor = '#2ecc71';
+                        groupButton.style.border = '1px solid #ddd';
+                        groupButton.style.boxShadow = 'none';
+                        groupButton.style.fontWeight = 'normal';
+                        groupButton.innerHTML = '按组抽取';
+                    }
+                    alert('已切换到随机抽取模式');
+                });
+            }
+            
+            // 初始化默认抽取方式的标记
+            if (groupDrawButton && drawMode === 'group') {
+                groupDrawButton.style.backgroundColor = '#27ae60';
+                groupDrawButton.style.border = '2px solid #27ae60';
+                groupDrawButton.style.boxShadow = '0 0 10px rgba(39, 174, 96, 0.3)';
+                groupDrawButton.style.fontWeight = 'bold';
+                groupDrawButton.innerHTML = '按组抽取 🐑';
+            } else if (randomDrawButton && drawMode === 'random') {
+                randomDrawButton.style.backgroundColor = '#2980b9';
+                randomDrawButton.style.border = '2px solid #2980b9';
+                randomDrawButton.style.boxShadow = '0 0 10px rgba(41, 128, 185, 0.3)';
+                randomDrawButton.style.fontWeight = 'bold';
+                randomDrawButton.innerHTML = '随机抽取 🐑';
+            }
+        }
+
+        // 处理 Excel 上传
+        function handleExcelUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            console.log('开始处理Excel文件:', file.name);
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                // 获取第一个工作表
+                const firstSheetName = workbook.SheetNames[0];
+                console.log('使用工作表:', firstSheetName);
+                
+                const worksheet = workbook.Sheets[firstSheetName];
+                console.log('工作表范围:', worksheet['!ref']);
+                
+                // 转换为 JSON（使用原始模式，确保转换所有列）
+                console.log('开始转换为JSON...');
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                    header: 1, // 0: 数组模式，1: 原始模式
+                    defval: '' // 空值默认值
+                });
+                console.log('转换完成，JSON数据长度:', jsonData.length);
+                console.log('第一行数据:', jsonData[0]);
+                
+                // 检查JSON数据结构
+                if (jsonData.length > 0) {
+                    console.log('第一行数据:', jsonData[0]);
+                    console.log('第一行列数量:', jsonData[0].length);
+                    console.log('总行数:', jsonData.length);
+                }
+                
+                // 检查是否是横向分组（第一行是分组标题，如A、B、C）
+                const isHorizontalGroup = jsonData.length > 0 && jsonData[0].some(cell => {
+                    const cellValue = String(cell || '').trim();
+                    return /^[A-Z]$/.test(cellValue);
+                });
+                
+                if (isHorizontalGroup) {
+                    console.log('检测到横向分组结构（A、B、C等）');
+                    parseHorizontalGroups(jsonData);
+                } else if (detectGroupsArray(jsonData)) {
+                    console.log('检测到分组信息，使用按列分组解析');
+                    // 按列分组（纵向）
+                    parseGroupsByColumnArray(jsonData);
+                } else {
+                    console.log('未检测到分组信息，尝试按行分组');
+                    // 尝试按行分组（横向）
+                    if (!parseGroupsByRow(worksheet)) {
+                        console.log('按行分组失败，使用默认分组');
+                        // 无分组，全部放入默认组
+                        const allNames = [];
+                        for (let i = 1; i < jsonData.length; i++) {
+                            const row = jsonData[i];
+                            for (let j = 0; j < row.length; j++) {
+                                const name = String(row[j] || '').trim();
+                                if (name) {
+                                    allNames.push(name);
+                                }
+                            }
+                        }
+                        groups = { '默认组': allNames };
+                        console.log('默认分组结果:', groups);
+                    }
+                }
+                
+                // 更新界面
+                updateNameListDisplay();
+                
+                // 生成随机显示的名字元素
+                generateNameElements();
+                
+                // 计算总人数
+                const totalCount = Object.values(groups).reduce((sum, group) => sum + group.length, 0);
+                console.log('最终导入结果:', { totalCount, groupCount: Object.keys(groups).length, groups });
+                alert(`成功导入 ${totalCount} 个名字，分为 ${Object.keys(groups).length} 组`);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // 检测是否有分组信息（处理对象数组）
+        function detectGroups(jsonData) {
+            if (!jsonData || jsonData.length === 0) {
+                console.log('JSON数据为空');
+                return false;
+            }
+            
+            console.log('检测分组信息...');
+            
+            // 检查是否有分组列
+            const firstRow = jsonData[0];
+            console.log('第一行数据:', firstRow);
+            
+            const hasGroupColumn = Object.keys(firstRow).some(key => {
+                const keyLower = key.toLowerCase();
+                const result = keyLower.includes('组') || keyLower.includes('group') || keyLower.includes('team') || keyLower.includes('class');
+                if (result) {
+                    console.log('找到分组列:', key);
+                }
+                return result;
+            });
+            
+            // 检查是否有分组数据
+            const hasGroupData = jsonData.some(row => {
+                return Object.values(row).some(value => {
+                    if (typeof value === 'string') {
+                        const valueTrimmed = value.trim();
+                        const valueLower = valueTrimmed.toLowerCase();
+                        const result = 
+                            valueLower.includes('组') || 
+                            /^[ABCDEFGHIJKLMNOPQRSTUVWXYZ]组$/.test(valueTrimmed) ||
+                            /^[A-Z]$/.test(valueTrimmed); // 单个英文字母作为组名
+                        if (result) {
+                            console.log('找到分组数据:', value);
+                        }
+                        return result;
+                    }
+                    return false;
+                });
+            });
+            
+            console.log('分组检测结果:', { hasGroupColumn, hasGroupData });
+            return hasGroupColumn || hasGroupData;
+        }
+
+        // 检测是否有分组信息（处理二维数组）
+        function detectGroupsArray(jsonData) {
+            if (!jsonData || jsonData.length < 2) {
+                console.log('二维数组数据为空或行数不足');
+                return false;
+            }
+            
+            console.log('检测二维数组分组信息...');
+            
+            // 检查是否有分组列
+            const headerRow = jsonData[0];
+            console.log('表头行数据:', headerRow);
+            
+            const hasGroupColumn = headerRow.some((cell, index) => {
+                const cellValue = String(cell || '').trim();
+                const cellLower = cellValue.toLowerCase();
+                const result = 
+                    cellLower.includes('组') || 
+                    cellLower.includes('group') || 
+                    cellLower.includes('team') || 
+                    cellLower.includes('class') ||
+                    /^[A-Z]$/.test(cellValue); // 单个英文字母作为组名
+                if (result) {
+                    console.log('找到分组列，索引:', index, '值:', cell);
+                }
+                return result;
+            });
+            
+            // 检查是否有分组数据
+            const hasGroupData = false; // 暂时不检查数据，只检查表头
+            
+            console.log('二维数组分组检测结果:', { hasGroupColumn, hasGroupData });
+            return hasGroupColumn;
+        }
+
+        // 按列解析分组（纵向）
+        function parseGroupsByColumn(jsonData) {
+            groups = {};
+            
+            console.log('JSON数据:', jsonData);
+            console.log('JSON数据长度:', jsonData.length);
+            
+            jsonData.forEach((item, index) => {
+                let groupName = '默认组';
+                let userNames = [];
+                
+                console.log(`\n处理第${index + 1}行:`);
+                console.log(`行数据:`, item);
+                console.log(`行数据键值对:`, Object.entries(item));
+                
+                // 查找分组列和所有姓名列
+                Object.entries(item).forEach(([key, value]) => {
+                    console.log(`处理列: ${key}, 值: ${value}, 类型: ${typeof value}`);
+                    
+                    const keyLower = key.toLowerCase();
+                    if (keyLower.includes('组') || keyLower.includes('group') || keyLower.includes('team') || keyLower.includes('class')) {
+                        // 处理组名
+                        let rawGroupName = value || '默认组';
+                        let processedGroupName = String(rawGroupName).trim();
+                        
+                        // 单个英文字母转换为"A组"格式
+                        if (/^[A-Z]$/.test(processedGroupName)) {
+                            processedGroupName = processedGroupName + '组';
+                        }
+                        
+                        groupName = processedGroupName || '默认组';
+                        console.log(`找到分组列: ${key}, 分组值: ${groupName}`);
+                    } else if (value !== null && value !== undefined && String(value).trim() !== '') {
+                        // 收集所有非分组列的非空值作为姓名
+                        const trimmedValue = String(value).trim();
+                        userNames.push(trimmedValue);
+                        console.log(`找到姓名列: ${key}, 姓名值: ${trimmedValue}`);
+                    } else {
+                        console.log(`跳过列: ${key}, 值: ${value}`);
+                    }
+                });
+                
+                console.log(`第${index + 1}行处理结果: 分组=${groupName}, 姓名数量=${userNames.length}`);
+                console.log(`收集到的姓名:`, userNames);
+                
+                // 将所有姓名添加到对应的组中
+                userNames.forEach((userName, nameIndex) => {
+                    if (userName) {
+                        if (!groups[groupName]) {
+                            groups[groupName] = [];
+                        }
+                        groups[groupName].push(userName);
+                        console.log(`添加姓名到组: ${userName} → ${groupName}`);
+                    }
+                });
+            });
+            
+            console.log('\n最终分组结果:', groups);
+            console.log('分组数量:', Object.keys(groups).length);
+            Object.entries(groups).forEach(([group, members]) => {
+                console.log(`${group}: ${members.length}人 →`, members);
+            });
+        }
+
+        // 按列解析分组（纵向，处理二维数组）
+        function parseGroupsByColumnArray(jsonData) {
+            groups = {};
+            
+            console.log('二维数组数据:', jsonData);
+            console.log('二维数组行数:', jsonData.length);
+            
+            if (jsonData.length < 2) {
+                console.log('行数不足');
+                return;
+            }
+            
+            // 检查是否是横向分组（第一行是分组标题）
+            const headerRow = jsonData[0];
+            const isHorizontalGroup = headerRow.some(cell => {
+                const cellValue = String(cell || '').trim();
+                return /^[A-Z]$/.test(cellValue);
+            });
+            
+            if (isHorizontalGroup) {
+                console.log('检测到横向分组结构');
+                // 处理横向分组
+                parseHorizontalGroups(jsonData);
+                return;
+            }
+            
+            // 找到分组列的索引
+            let groupColumnIndex = -1;
+            
+            for (let i = 0; i < headerRow.length; i++) {
+                const cellValue = String(headerRow[i] || '').trim();
+                const cellLower = cellValue.toLowerCase();
+                if (cellLower.includes('组') || cellLower.includes('group') || cellLower.includes('team') || cellLower.includes('class') || /^[A-Z]$/.test(cellValue)) {
+                    groupColumnIndex = i;
+                    console.log('找到分组列，索引:', i, '值:', headerRow[i]);
+                    break;
+                }
+            }
+            
+            if (groupColumnIndex === -1) {
+                console.log('未找到分组列');
+                return;
+            }
+            
+            // 处理数据行
+            for (let i = 1; i < jsonData.length; i++) {
+                const row = jsonData[i];
+                let groupName = '默认组';
+                let userNames = [];
+                
+                console.log(`\n处理第${i + 1}行:`);
+                console.log(`行数据:`, row);
+                
+                // 获取组名
+                if (row[groupColumnIndex] !== undefined) {
+                    let rawGroupName = row[groupColumnIndex] || '默认组';
+                    let processedGroupName = String(rawGroupName).trim();
+                    
+                    // 单个英文字母转换为"A组"格式
+                    if (/^[A-Z]$/.test(processedGroupName)) {
+                        processedGroupName = processedGroupName + '组';
+                    }
+                    
+                    groupName = processedGroupName || '默认组';
+                    console.log(`找到分组值: ${groupName}`);
+                }
+                
+                // 收集所有非分组列的非空值作为姓名
+                for (let j = 0; j < row.length; j++) {
+                    if (j !== groupColumnIndex) { // 跳过分组列
+                        const value = row[j];
+                        if (value !== null && value !== undefined && String(value).trim() !== '') {
+                            const trimmedValue = String(value).trim();
+                            userNames.push(trimmedValue);
+                            console.log(`找到姓名列，索引: ${j}, 姓名值: ${trimmedValue}`);
+                        }
+                    }
+                }
+                
+                console.log(`第${i + 1}行处理结果: 分组=${groupName}, 姓名数量=${userNames.length}`);
+                console.log(`收集到的姓名:`, userNames);
+                
+                // 将所有姓名添加到对应的组中
+                userNames.forEach((userName, nameIndex) => {
+                    if (userName) {
+                        if (!groups[groupName]) {
+                            groups[groupName] = [];
+                        }
+                        groups[groupName].push(userName);
+                        console.log(`添加姓名到组: ${userName} → ${groupName}`);
+                    }
+                });
+            }
+            
+            console.log('\n最终二维数组分组结果:', groups);
+            console.log('分组数量:', Object.keys(groups).length);
+            Object.entries(groups).forEach(([group, members]) => {
+                console.log(`${group}: ${members.length}人 →`, members);
+            });
+        }
+
+        // 处理横向分组（第一行是分组标题）
+        function parseHorizontalGroups(jsonData) {
+            groups = {};
+            
+            const headerRow = jsonData[0];
+            console.log('处理横向分组，分组标题:', headerRow);
+            
+            // 遍历每个分组列
+            for (let j = 0; j < headerRow.length; j++) {
+                const groupTitle = String(headerRow[j] || '').trim();
+                if (groupTitle && /^[A-Z]$/.test(groupTitle)) {
+                    // 转换为标准组名格式
+                    const groupName = groupTitle + '组';
+                    groups[groupName] = [];
+                    
+                    console.log(`创建分组: ${groupName}`);
+                    
+                    // 收集该组的所有成员
+                    for (let i = 1; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        const member = String(row[j] || '').trim();
+                        if (member) {
+                            groups[groupName].push(member);
+                            console.log(`添加成员到${groupName}: ${member}`);
+                        }
+                    }
+                }
+            }
+            
+            console.log('\n最终横向分组结果:', groups);
+            console.log('分组数量:', Object.keys(groups).length);
+            Object.entries(groups).forEach(([group, members]) => {
+                console.log(`${group}: ${members.length}人 →`, members);
+            });
+        }
+
+        // 按行解析分组（横向）
+        function parseGroupsByRow(worksheet) {
+            groups = {};
+            let hasGroups = false;
+            
+            // 读取所有单元格
+            const range = XLSX.utils.decode_range(worksheet['!ref']);
+            
+            // 遍历每一列，检查是否是分组
+            for (let c = range.s.c; c <= range.e.c; c++) {
+                const groupCellAddress = XLSX.utils.encode_cell({ r: range.s.r, c: c });
+                const groupCell = worksheet[groupCellAddress];
+                
+                if (groupCell && typeof groupCell.v === 'string') {
+                    const groupName = groupCell.v.trim();
+                    // 检查是否是有效的分组名（包含A组、B组、C组等）
+                    if (groupName.includes('组') || /^[ABCDEFGHIJKLMNOPQRSTUVWXYZ]组$/.test(groupName)) {
+                        hasGroups = true;
+                        groups[groupName] = [];
+                        
+                        // 读取该列下的所有名字
+                        for (let r = range.s.r + 1; r <= range.e.r; r++) {
+                            const nameCellAddress = XLSX.utils.encode_cell({ r: r, c: c });
+                            const nameCell = worksheet[nameCellAddress];
+                            
+                            if (nameCell && nameCell.v && typeof nameCell.v === 'string') {
+                                const name = nameCell.v.trim();
+                                if (name) {
+                                    groups[groupName].push(name);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return hasGroups;
+        }
+
+        // 处理抽取人数变化
+        function handleDrawCountChange(e) {
+            currentDrawCount = parseInt(e.target.value) || 1;
+            if (currentDrawCount < 1) {
+                currentDrawCount = 1;
+                e.target.value = 1;
+            }
+        }
+
+        // 调整抽取人数
+        function adjustDrawCount(delta) {
+            const inputElement = document.getElementById('draw-count');
+            if (!inputElement) return;
+            
+            let currentValue = parseInt(inputElement.value) || 1;
+            const newValue = currentValue + delta;
+            
+            if (newValue >= 1) {
+                inputElement.value = newValue;
+                currentDrawCount = newValue;
+            }
+        }
+
+        // 更新nameList数组
+        function updateNameList() {
+            nameList = [];
+            Object.values(groups).forEach(group => {
+                group.forEach(name => {
+                    nameList.push(name);
+                });
+            });
+        }
+
+        // 更新名单显示
+        function updateNameListDisplay() {
+            if (!nameListElement) return;
+            
+            const groupKeys = Object.keys(groups);
+            if (groupKeys.length === 0 || Object.values(groups).every(group => group.length === 0)) {
+                nameListElement.innerHTML = '<li class="empty-message">暂无名单，请先导入 Excel</li>';
+                return;
+            }
+            
+            // 更新nameList数组
+            updateNameList();
+            
+            // 清空现有内容
+            nameListElement.innerHTML = '';
+            
+            // 创建一个包含所有组的容器
+            const groupsContainer = document.createElement('li');
+            groupsContainer.style.listStyle = 'none';
+            groupsContainer.style.padding = '0';
+            
+            // 为每个组创建单独的列
+            const columnsContainer = document.createElement('div');
+            columnsContainer.style.display = 'flex';
+            columnsContainer.style.gap = '20px';
+            columnsContainer.style.flexWrap = 'wrap';
+            columnsContainer.style.justifyContent = 'flex-start';
+            
+            groupKeys.forEach(groupName => {
+                const groupMembers = groups[groupName];
+                if (groupMembers && groupMembers.length > 0) {
+                    // 创建组列
+                    const column = document.createElement('div');
+                    column.style.flex = '1';
+                    column.style.minWidth = '120px';
+                    column.style.padding = '10px';
+                    column.style.background = '#f8f9fa';
+                    column.style.borderRadius = '8px';
+                    column.style.border = '1px solid #e9ecef';
+                    
+                    // 创建组标题
+                    const groupTitle = document.createElement('h4');
+                    groupTitle.textContent = groupName;
+                    groupTitle.style.color = '#3498db';
+                    groupTitle.style.marginTop = '0';
+                    groupTitle.style.marginBottom = '10px';
+                    groupTitle.style.fontSize = '14px';
+                    column.appendChild(groupTitle);
+                    
+                    // 添加成员
+                    groupMembers.forEach((name) => {
+                        const memberItem = document.createElement('div');
+                        memberItem.textContent = name;
+                        memberItem.style.padding = '4px 0';
+                        memberItem.style.fontSize = '13px';
+                        column.appendChild(memberItem);
+                    });
+                    
+                    columnsContainer.appendChild(column);
+                }
+            });
+            
+            groupsContainer.appendChild(columnsContainer);
+            nameListElement.appendChild(groupsContainer);
+            
+            // 调整名单框高度
+            adjustNameListHeight();
+        }
+
+        // 颜色数组
+        const nameColors = [
+            '#3498db', // 蓝色
+            '#e74c3c', // 红色
+            '#2ecc71', // 绿色
+            '#f39c12', // 橙色
+            '#9b59b6', // 紫色
+            '#1abc9c', // 青绿色
+            '#e67e22', // 深橙色
+            '#34495e'  // 深蓝色
+        ];
+
+        // 更新结果显示
+        function updateResultDisplay(results = []) {
+            if (!resultDisplay) return;
+            
+            if (results.length === 0) {
+                resultDisplay.innerHTML = '<div class="empty-result">抽取结果将显示在这里</div>';
+                return;
+            }
+            
+            // 创建结果容器
+            const resultsContainer = document.createElement('div');
+            resultsContainer.style.display = 'flex';
+            resultsContainer.style.gap = '20px';
+            resultsContainer.style.flexWrap = 'wrap';
+            resultsContainer.style.justifyContent = 'center';
+            resultsContainer.style.alignItems = 'flex-start';
+            
+            if (drawMode === 'group') {
+                // 按组抽取时，同一组的成员显示在同一列
+                const groupedResults = {};
+                
+                // 按组分组结果
+                results.forEach(result => {
+                    const parts = result.split(': ');
+                    if (parts.length === 2) {
+                        const groupName = parts[0];
+                        const name = parts[1];
+                        if (!groupedResults[groupName]) {
+                            groupedResults[groupName] = [];
+                        }
+                        groupedResults[groupName].push(name);
+                    } else {
+                        if (!groupedResults['默认组']) {
+                            groupedResults['默认组'] = [];
+                        }
+                        groupedResults['默认组'].push(result);
+                    }
+                });
+                
+                // 添加每个组的列
+                const groupKeys = Object.keys(groupedResults);
+                groupKeys.forEach((groupName, groupIndex) => {
+                    const groupMembers = groupedResults[groupName];
+                    if (groupMembers && groupMembers.length > 0) {
+                        // 创建组列
+                        const groupColumn = document.createElement('div');
+                        groupColumn.style.padding = '15px';
+                        groupColumn.style.background = '#f8f9fa';
+                        groupColumn.style.borderRadius = '8px';
+                        groupColumn.style.border = '1px solid #e9ecef';
+                        groupColumn.style.minWidth = '120px';
+                        groupColumn.style.textAlign = 'center';
+                        
+                        // 创建组标题
+                        const groupTitle = document.createElement('h4');
+                        const color = nameColors[groupIndex % nameColors.length];
+                        groupTitle.textContent = groupName;
+                        groupTitle.style.color = color;
+                        groupTitle.style.marginTop = '0';
+                        groupTitle.style.marginBottom = '10px';
+                        groupTitle.style.fontSize = '14px';
+                        groupColumn.appendChild(groupTitle);
+                        
+                        // 添加组内成员
+                        groupMembers.forEach(name => {
+                            const memberItem = document.createElement('div');
+                            memberItem.textContent = name;
+                            memberItem.style.padding = '5px 0';
+                            memberItem.style.fontSize = '14px';
+                            memberItem.style.color = '#333';
+                            groupColumn.appendChild(memberItem);
+                        });
+                        
+                        resultsContainer.appendChild(groupColumn);
+                    }
+                });
+            } else {
+                // 随机抽取时，每个结果单独显示
+                results.forEach((name, index) => {
+                    const color = nameColors[index % nameColors.length];
+                    const resultColumn = document.createElement('div');
+                    resultColumn.style.padding = '10px';
+                    resultColumn.style.background = '#f8f9fa';
+                    resultColumn.style.borderRadius = '8px';
+                    resultColumn.style.border = '1px solid #e9ecef';
+                    resultColumn.style.minWidth = '100px';
+                    resultColumn.style.textAlign = 'center';
+                    resultColumn.style.color = color;
+                    resultColumn.style.fontWeight = 'bold';
+                    resultColumn.style.fontSize = '16px';
+                    resultColumn.textContent = name;
+                    resultsContainer.appendChild(resultColumn);
+                });
+            }
+            
+            resultDisplay.innerHTML = '';
+            resultDisplay.appendChild(resultsContainer);
+        }
+
+        // 音效相关函数
+        function playScrollSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(880, audioContext.currentTime + 0.1);
+                oscillator.frequency.exponentialRampToValueAtTime(440, audioContext.currentTime + 0.2);
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.2);
+            } catch (e) {
+                console.log('音效播放失败:', e);
+            }
+        }
+        
+        function playCelebrationSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.2); // E5
+                oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.4); // G5
+                oscillator.frequency.setValueAtTime(1046.50, audioContext.currentTime + 0.6); // C6
+                
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.1);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1.2);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 1.2);
+            } catch (e) {
+                console.log('音效播放失败:', e);
+            }
+        }
+        
+        // 开始抽取
+        function startDraw() {
+            // 检查是否有分组和名字
+            const hasNames = Object.values(groups).some(group => group.length > 0);
+            if (!hasNames) {
+                alert('请先导入名单');
+                return;
+            }
+            
+            if (isDrawing) return;
+            
+            isDrawing = true;
+            startDrawButton.disabled = true;
+            stopDrawButton.disabled = false;
+            
+            // 开始随机滚动显示
+            drawInterval = setInterval(() => {
+                const randomResults = getRandomNames(currentDrawCount);
+                updateResultDisplay(randomResults);
+                // 播放滚动音效
+                playScrollSound();
+            }, 100);
+        }
+
+        // 结束抽取
+        function stopDraw() {
+            if (!isDrawing) return;
+            
+            clearInterval(drawInterval);
+            isDrawing = false;
+            startDrawButton.disabled = false;
+            stopDrawButton.disabled = true;
+            
+            // 显示最终结果
+            const finalResults = getRandomNames(currentDrawCount);
+            updateResultDisplay(finalResults);
+            
+            // 记录历史
+            recordDrawHistory(finalResults);
+            
+            // 更新历史显示
+            updateHistoryDisplay();
+            
+            // 播放动画效果
+            playResultAnimation();
+            
+            // 播放庆祝音效
+            playCelebrationSound();
+        }
+
+        // 获取随机名字
+        function getRandomNames(count) {
+            const groupKeys = Object.keys(groups);
+            if (groupKeys.length === 0) return [];
+            
+            if (drawMode === 'group') {
+                // 按组抽取逻辑
+                return getGroupRandomNames(count);
+            } else {
+                // 随机抽取逻辑
+                return getRandomRandomNames(count);
+            }
+        }
+
+        // 按组抽取
+        function getGroupRandomNames(count) {
+            const groupKeys = Object.keys(groups);
+            let results = [];
+            
+            // 从每个组抽取指定数量的人
+            groupKeys.forEach(groupName => {
+                const groupMembers = groups[groupName];
+                if (groupMembers && groupMembers.length > 0) {
+                    // 对每个组进行洗牌
+                    const shuffled = [...groupMembers];
+                    for (let i = shuffled.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                    }
+                    // 从每个组抽取count个人
+                    const groupResults = shuffled.slice(0, count);
+                    // 添加组名标识
+                    const namedResults = groupResults.map(name => `${groupName}: ${name}`);
+                    results = results.concat(namedResults);
+                }
+            });
+            
+            return results;
+        }
+
+        // 随机抽取
+        function getRandomRandomNames(count) {
+            // 收集所有名字
+            let allNames = [];
+            Object.entries(groups).forEach(([groupName, members]) => {
+                members.forEach(name => {
+                    allNames.push(`${groupName}: ${name}`);
+                });
+            });
+            
+            // 洗牌
+            for (let i = allNames.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allNames[i], allNames[j]] = [allNames[j], allNames[i]];
+            }
+            
+            // 抽取指定数量
+            return allNames.slice(0, Math.min(count, allNames.length));
+        }
+
+        // 播放结果动画
+        function playResultAnimation() {
+            if (!resultDisplay) return;
+            
+            // 添加脉冲动画
+            resultDisplay.classList.add('pulse');
+            
+            // 添加缩放动画
+            resultDisplay.style.transform = 'scale(1.05)';
+            resultDisplay.style.transition = 'transform 0.5s ease';
+            
+            // 添加边框颜色变化
+            resultDisplay.style.borderColor = '#e74c3c';
+            resultDisplay.style.boxShadow = '0 0 15px rgba(231, 76, 60, 0.3)';
+            
+            setTimeout(() => {
+                resultDisplay.classList.remove('pulse');
+                resultDisplay.style.transform = 'scale(1)';
+                resultDisplay.style.borderColor = '#3498db';
+                resultDisplay.style.boxShadow = 'none';
+            }, 1000);
+        }
+
+        // 记录抽取历史
+        function recordDrawHistory(results) {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            const resultString = results.join('、');
+            const historyItem = {
+                time: timeString,
+                results: resultString,
+                date: now.toISOString().split('T')[0]
+            };
+            
+            drawHistory.unshift(historyItem);
+            if (drawHistory.length > 10) {
+                drawHistory = drawHistory.slice(0, 10);
+            }
+            
+            totalDraws++;
+            
+            // 检查是否是今天
+            const today = new Date().toISOString().split('T')[0];
+            if (historyItem.date === today) {
+                todayDraws++;
+            }
+            
+            // 保存历史记录
+            saveHistoryData();
+        }
+
+        // 更新历史记录显示
+        function updateHistoryDisplay() {
+            if (!historyListElement) return;
+            
+            if (drawHistory.length === 0) {
+                historyListElement.innerHTML = '<li>暂无抽取记录</li>';
+                return;
+            }
+            
+            const historyItems = drawHistory.map(item => 
+                `<li>${item.time}: ${item.results}</li>`
+            ).join('');
+            
+            historyListElement.innerHTML = historyItems;
+        }
+
+        // 保存历史数据
+        function saveHistoryData() {
+            localStorage.setItem('drawHistory', JSON.stringify(drawHistory));
+            localStorage.setItem('totalDraws', totalDraws);
+            localStorage.setItem('todayDraws', todayDraws);
+            localStorage.setItem('lastDrawDate', new Date().toISOString().split('T')[0]);
+        }
+
+        // 加载历史数据
+        function loadHistoryData() {
+            const savedHistory = localStorage.getItem('drawHistory');
+            const savedTotalDraws = localStorage.getItem('totalDraws');
+            const savedTodayDraws = localStorage.getItem('todayDraws');
+            const lastDrawDate = localStorage.getItem('lastDrawDate');
+            
+            if (savedHistory) {
+                drawHistory = JSON.parse(savedHistory);
+            }
+            
+            if (savedTotalDraws) {
+                totalDraws = parseInt(savedTotalDraws) || 0;
+            }
+            
+            // 检查是否是新的一天
+            const today = new Date().toISOString().split('T')[0];
+            if (lastDrawDate !== today) {
+                todayDraws = 0;
+            } else if (savedTodayDraws) {
+                todayDraws = parseInt(savedTodayDraws) || 0;
+            }
+        }
+
+        // 保存名单数据
+        function saveNameList() {
+            localStorage.setItem('groups', JSON.stringify(groups));
+            alert('名单已保存');
+        }
+
+        // 加载名单数据
+        function loadNameList() {
+            const savedGroups = localStorage.getItem('groups');
+            if (savedGroups) {
+                groups = JSON.parse(savedGroups);
+                updateNameListDisplay();
+            }
+        }
+
+        // 添加一些模拟数据（用于测试）
+        function addTestData() {
+            // 创建测试分组数据
+            groups = {
+                'A组': ['张三', '李四', '王五', '赵六', '钱七'],
+                'B组': ['孙八', '周九', '吴十', '郑一', '王二'],
+                'C组': ['陈三', '刘四', '林五', '黄六', '杨七']
+            };
+            updateNameListDisplay();
+            generateNameElements();
+        }
+
+        // 当 DOM 加载完成后初始化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        // 导出功能（可选）
+        function exportResults(results) {
+            // 这里可以添加导出结果的功能
+            console.log('导出结果:', results);
+        }
+
+        // 清空名单
+        function clearNameList() {
+            groups = {};
+            updateNameListDisplay();
+            updateResultDisplay();
+        }
+
+        // 手动添加名字（可选）
+        function addName(name, group = '默认组') {
+            if (name && name.trim() !== '') {
+                if (!groups[group]) {
+                    groups[group] = [];
+                }
+                groups[group].push(name.trim());
+                updateNameListDisplay();
+            }
+        }
+
+        // 临时添加单个名字
+        function addSingleName() {
+            const inputElement = document.getElementById('add-name-input');
+            if (!inputElement) return;
+            
+            const name = inputElement.value;
+            if (name && name.trim() !== '') {
+                // 默认添加到默认组
+                if (!groups['默认组']) {
+                    groups['默认组'] = [];
+                }
+                groups['默认组'].push(name.trim());
+                updateNameListDisplay();
+                inputElement.value = ''; // 清空输入框
+                alert(`成功添加名字: ${name.trim()}`);
+            } else {
+                alert('请输入有效的名字');
+            }
+        }
+
+        // 生成随机显示的名字元素
+        function generateNameElements() {
+            // 清除现有的名字元素
+            const existingElements = document.querySelectorAll('.name-element');
+            existingElements.forEach(el => el.remove());
+            
+            // 收集所有名字
+            let allNames = [];
+            Object.entries(groups).forEach(([groupName, members]) => {
+                members.forEach(name => {
+                    allNames.push({ group: groupName, name: name });
+                });
+            });
+            
+            // 计算页面网格，确保均匀分布
+            const gridSize = Math.ceil(Math.sqrt(allNames.length));
+            const cellWidth = 100 / (gridSize + 1);
+            const cellHeight = 100 / (gridSize + 1);
+            
+            // 为每个名字生成元素
+            allNames.forEach((item, index) => {
+                setTimeout(() => {
+                    const nameElement = document.createElement('div');
+                    nameElement.className = 'name-element';
+                    
+                    // 根据名字特征生成卡通
+                    const cartoon = getCartoonForName(item.name);
+                    
+                    nameElement.innerHTML = `
+                        <div class="name-cartoon">${cartoon}</div>
+                        <div class="name-text">${item.name}</div>
+                        <div class="name-group" style="font-size: 10px; color: #999; margin-top: 2px;">${item.group}</div>
+                    `;
+                    
+                    // 网格位置计算，确保均匀分布
+                    const row = Math.floor(index / gridSize);
+                    const col = index % gridSize;
+                    const baseLeft = (col + 0.5) * cellWidth;
+                    const baseTop = (row + 0.5) * cellHeight;
+                    
+                    // 添加一些随机偏移，避免完全规则排列
+                    const randomLeft = baseLeft + (Math.random() - 0.5) * cellWidth * 0.6;
+                    const randomTop = baseTop + (Math.random() - 0.5) * cellHeight * 0.6;
+                    
+                    // 确保元素在页面范围内
+                    const finalLeft = Math.max(5, Math.min(95, randomLeft));
+                    const finalTop = Math.max(5, Math.min(95, randomTop));
+                    
+                    // 设置位置和动画
+                    nameElement.style.left = finalLeft + '%';
+                    nameElement.style.top = finalTop + '%';
+                    nameElement.style.animationDelay = Math.random() * 3 + 's';
+                    nameElement.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                    
+                    document.body.appendChild(nameElement);
+                }, index * 100);
+            });
+        }
+
+        // 根据名字特征生成卡通
+        function getCartoonForName(name) {
+            // 随机生成一个动物卡通图案
+            const cartoonList = cartoonCategories.animals;
+            const randomIndex = Math.floor(Math.random() * cartoonList.length);
+            return cartoonList[randomIndex];
+        }
+
+        // 多样化卡通图案列表（按类别分组）
+        const cartoonCategories = {
+            // 动物类
+            animals: [
+                '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼',
+                '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔',
+                '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉',
+                '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋',
+                '🐌', '🐞', '🐜', '🕷️', '🦂', '🐢', '🐍', '🦎',
+                '🦖', '🦕', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡',
+                '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅',
+                '🐆', '🐃', '🐂', '🐄', '🐪', '🐫', '🐘', '🦏',
+                '🦛', '🐭', '🐁', '🐀', '🐇', '🐰', '🦫', '🦔',
+                '🦇', '🐻‍❄️', '🐨', '🐼', '🦥', '🦦', '🦨', '🦘'
+            ],
+            // 其他类别（保留但不使用）
+            food: []
+        }
+
+        // 自动加载本地存储的名单
+        loadNameList();
+
+        // 名字元素飘落效果
+        function createNameElement() {
+            if (nameList.length === 0) return;
+            
+            const randomIndex = Math.floor(Math.random() * nameList.length);
+            const name = nameList[randomIndex];
+            const cartoon = getCartoonForName(name);
+            
+            const nameElement = document.createElement('div');
+            
+            // 随机应用不同形状（12种形状）
+            const shapeClass = `shape-${Math.floor(Math.random() * 12) + 1}`;
+            nameElement.className = `name-fall ${shapeClass}`;
+            
+            nameElement.innerHTML = `
+                <div class="name-cartoon">${cartoon}</div>
+                <div class="name-text">${name}</div>
+            `;
+            
+            nameElement.style.left = Math.random() * 85 + 5 + '%';
+            nameElement.style.animationDuration = (Math.random() * 8 + 8) + 's'; // 延长显示时间
+            nameElement.style.opacity = Math.random() * 0.3 + 0.9; // 提高清晰度
+            nameElement.style.transform = `scale(${Math.random() * 0.2 + 0.9})`;
+            
+            document.body.appendChild(nameElement);
+            
+            setTimeout(() => {
+                if (nameElement.parentNode) {
+                    nameElement.remove();
+                }
+            }, 20000); // 延长移除时间
+        }
+
+        // 定期创建飘落的名字元素
+        setInterval(createNameElement, 3000); // 调整创建频率
+
+        // 更新当前日期时间
+        function updateDateTime() {
+            const now = new Date();
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                weekday: 'long'
+            };
+            const dateTimeString = now.toLocaleString('zh-CN', options);
+            document.getElementById('current-date-time').textContent = dateTimeString;
+        }
+
+        // 倒计时功能变量
+        let countdownInterval = null;
+        let totalSeconds = 0;
+        let currentAudio = null;
+        
+        // 本地诗歌文件列表
+        let localHymnFiles = [];
+        
+        // 更新倒计时显示
+        function updateCountdownDisplay(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            const countdownElement = document.getElementById('countdown');
+            if (seconds > 0) {
+                countdownElement.textContent = `倒计时: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            } else {
+                countdownElement.textContent = '倒计时结束！';
+            }
+        }
+        
+        // 开始倒计时
+        function startCountdown() {
+            const minutesInput = document.getElementById('countdown-minutes');
+            const minutes = parseInt(minutesInput.value) || 1;
+            
+            if (minutes < 1 || minutes > 60) {
+                alert('请输入1-60之间的分钟数');
+                return;
+            }
+            
+            // 停止之前的倒计时
+            stopCountdown();
+            
+            // 如果有选择诗歌文件，先播放诗歌
+            if (localHymnFiles.length > 0) {
+                playRandomHymn();
+            }
+            
+            totalSeconds = minutes * 60;
+            updateCountdownDisplay(totalSeconds);
+            
+            // 开始新的倒计时
+            countdownInterval = setInterval(() => {
+                totalSeconds--;
+                updateCountdownDisplay(totalSeconds);
+                
+                if (totalSeconds <= 0) {
+                    stopCountdown();
+                    // 倒计时结束时停止音乐并播放提示音
+                    stopHymn();
+                    playNotificationSound();
+                }
+            }, 1000);
+        }
+        
+        // 停止倒计时
+        function stopCountdown() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+            
+            // 停止赞美诗播放
+            stopHymn();
+        }
+        
+        // 播放随机赞美诗
+        function playRandomHymn() {
+            // 停止之前的音频
+            stopHymn();
+            
+            try {
+                // 检查是否有本地诗歌文件
+                if (localHymnFiles.length > 0) {
+                    // 随机选择一首本地诗歌
+                    const randomIndex = Math.floor(Math.random() * localHymnFiles.length);
+                    const fileUrl = localHymnFiles[randomIndex];
+                    
+                    // 创建音频对象
+                    currentAudio = new Audio(fileUrl);
+                    currentAudio.loop = true; // 循环播放
+                    currentAudio.volume = 0.5; // 设置音量
+                    
+                    // 播放音频
+                    currentAudio.play().then(() => {
+                        console.log('本地诗歌播放成功');
+                    }).catch(e => {
+                        console.log('本地音频播放失败:', e);
+                        // 尝试使用Web Audio API
+                        tryWebAudioPlay(fileUrl);
+                    });
+                    
+                } else {
+                    console.log('没有选择本地诗歌文件');
+                }
+                
+            } catch (e) {
+                console.log('播放赞美诗失败:', e);
+            }
+        }
+        
+        // 使用Web Audio API播放音频
+        function tryWebAudioPlay(fileUrl) {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) {
+                    throw new Error('Web Audio API 不支持');
+                }
+                
+                const audioContext = new AudioContext();
+                
+                // 加载音频文件
+                fetch(fileUrl)
+                    .then(response => response.arrayBuffer())
+                    .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+                    .then(audioBuffer => {
+                        // 创建音频源
+                        const source = audioContext.createBufferSource();
+                        source.buffer = audioBuffer;
+                        source.loop = true;
+                        
+                        // 创建音量控制
+                        const gainNode = audioContext.createGain();
+                        gainNode.gain.value = 0.5;
+                        
+                        // 连接音频节点
+                        source.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        // 播放音频
+                        source.start();
+                        
+                        // 保存音频源以便后续停止
+                        currentAudio = source;
+                    })
+                    .catch(e => {
+                        console.log('Web Audio API 播放失败:', e);
+                    });
+                    
+            } catch (e) {
+                console.log('尝试Web Audio API失败:', e);
+            }
+        }
+        
+        // 停止赞美诗播放
+        function stopHymn() {
+            if (currentAudio) {
+                try {
+                    if (currentAudio.pause) {
+                        // 处理Audio对象
+                        currentAudio.pause();
+                        currentAudio.currentTime = 0;
+                    } else if (currentAudio.stop) {
+                        // 处理Web Audio API的AudioBufferSourceNode
+                        currentAudio.stop();
+                    }
+                    currentAudio = null;
+                } catch (e) {
+                    console.log('停止音频失败:', e);
+                }
+            }
+        }
+
+        // 添加文件选择事件监听器
+        function initFileInputListener() {
+            const hymnFileInput = document.getElementById('hymn-file');
+            const hymnStatus = document.getElementById('hymn-status');
+            
+            if (hymnFileInput) {
+                // 加载之前存储的文件信息
+                loadSavedHymnFiles();
+                
+                hymnFileInput.addEventListener('change', function(e) {
+                    localHymnFiles = [];
+                    const fileNames = [];
+                    
+                    if (e.target.files) {
+                        for (let i = 0; i < e.target.files.length; i++) {
+                            const file = e.target.files[i];
+                            const fileUrl = URL.createObjectURL(file);
+                            localHymnFiles.push(fileUrl);
+                            fileNames.push(file.name);
+                        }
+                        
+                        console.log('已选择', localHymnFiles.length, '个本地诗歌文件:', fileNames);
+                        
+                        // 保存文件信息到localStorage
+                        saveHymnFilesInfo(fileNames);
+                        
+                        // 更新状态显示
+                        if (hymnStatus) {
+                            hymnStatus.textContent = `已选择 ${localHymnFiles.length} 个文件: ${fileNames.slice(0, 2).join(', ')}${fileNames.length > 2 ? '...' : ''}`;
+                            hymnStatus.style.color = '#27ae60';
+                        }
+                    } else {
+                        // 清空文件信息
+                        clearHymnFilesInfo();
+                        if (hymnStatus) {
+                            hymnStatus.textContent = '未选择诗歌文件';
+                            hymnStatus.style.color = '#999';
+                        }
+                    }
+                });
+            }
+        }
+        
+        // 保存诗歌文件信息到localStorage
+        function saveHymnFilesInfo(fileNames) {
+            try {
+                localStorage.setItem('hymnFileNames', JSON.stringify(fileNames));
+                localStorage.setItem('hymnFilesSaved', 'true');
+            } catch (e) {
+                console.log('保存诗歌文件信息失败:', e);
+            }
+        }
+        
+        // 加载保存的诗歌文件信息
+        function loadSavedHymnFiles() {
+            try {
+                const saved = localStorage.getItem('hymnFilesSaved');
+                const savedNames = localStorage.getItem('hymnFileNames');
+                
+                if (saved === 'true' && savedNames) {
+                    const fileNames = JSON.parse(savedNames);
+                    if (fileNames && fileNames.length > 0) {
+                        const hymnStatus = document.getElementById('hymn-status');
+                        if (hymnStatus) {
+                            hymnStatus.textContent = `已保存 ${fileNames.length} 个文件: ${fileNames.slice(0, 2).join(', ')}${fileNames.length > 2 ? '...' : ''}`;
+                            hymnStatus.style.color = '#3498db';
+                        }
+                        console.log('已加载保存的诗歌文件信息:', fileNames);
+                    }
+                }
+            } catch (e) {
+                console.log('加载诗歌文件信息失败:', e);
+            }
+        }
+        
+        // 清空诗歌文件信息
+        function clearHymnFilesInfo() {
+            try {
+                localStorage.removeItem('hymnFileNames');
+                localStorage.removeItem('hymnFilesSaved');
+            } catch (e) {
+                console.log('清空诗歌文件信息失败:', e);
+            }
+        }
+        
+        // 播放提醒音效
+        function playNotificationSound() {
+            try {
+                // 创建音频上下文
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) {
+                    throw new Error('Web Audio API 不支持');
+                }
+                
+                const audioContext = new AudioContext();
+                
+                // 播放5秒的叮铃铃声
+                let currentTime = audioContext.currentTime;
+                const duration = 5;
+                
+                // 创建多个振荡器产生叮铃效果（每秒2次）
+                for (let i = 0; i < duration * 2; i++) {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    // 叮铃声效果 - 交替频率
+                    oscillator.type = 'sine';
+                    const freq1 = 800;
+                    const freq2 = 1000;
+                    oscillator.frequency.setValueAtTime(i % 2 === 0 ? freq1 : freq2, currentTime + i * 0.5);
+                    
+                    // 音量包络
+                    gainNode.gain.setValueAtTime(0, currentTime + i * 0.5);
+                    gainNode.gain.linearRampToValueAtTime(0.3, currentTime + i * 0.5 + 0.02);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, currentTime + i * 0.5 + 0.45);
+                    
+                    oscillator.start(currentTime + i * 0.5);
+                    oscillator.stop(currentTime + i * 0.5 + 0.5);
+                }
+                
+                // 5秒后显示提示，确保音效播放完毕
+                setTimeout(() => {
+                    alert('倒计时结束！');
+                }, duration * 1000 + 100);
+                
+            } catch (e) {
+                console.log('音效播放失败:', e);
+                // 即使音效播放失败，也显示alert
+                alert('倒计时结束！');
+            }
+        }
+
+        // 随机经文数组
+        const bibleVerses = [
+            '耶和华是我的牧者，我必不至缺乏。他使我躺卧在青草地上，领我在可安歇的水边。（诗篇 23:1-2）',
+            '应当一无挂虑，只要凡事借着祷告、祈求和感谢，将你们所要的告诉神。（腓立比书 4:6）',
+            '神爱世人，甚至将他的独生子赐给他们，叫一切信他的，不至灭亡，反得永生。（约翰福音 3:16）',
+            '我靠着那加给我力量的，凡事都能做。（腓立比书 4:13）',
+            '你们要常在我里面，我也常在你们里面。（约翰福音 15:4）',
+            '敬畏耶和华是智慧的开端，认识至圣者便是聪明。（箴言 9:10）',
+            '凡劳苦担重担的人，可以到我这里来，我就使你们得安息。（马太福音 11:28）',
+            '你们要彼此相爱，像我爱你们一样，这就是我的命令。（约翰福音 15:12）',
+            '我将这些事告诉你们，是要叫你们在我里面有平安。在世上你们有苦难，但你们可以放心，我已经胜了世界。（约翰福音 16:33）',
+            '你们祈求，就给你们；寻找，就寻见；叩门，就给你们开门。（马太福音 7:7）'
+        ];
+
+        // 显示随机经文
+        function showRandomVerse() {
+            const randomIndex = Math.floor(Math.random() * bibleVerses.length);
+            document.getElementById('verse-content').textContent = bibleVerses[randomIndex];
+        }
+
+        // 调整名单框高度
+        function adjustNameListHeight() {
+            const nameList = document.getElementById('name-list');
+            if (nameList) {
+                const groupKeys = Object.keys(groups);
+                const hasNames = groupKeys.length > 0 && Object.values(groups).some(group => group.length > 0);
+                
+                if (hasNames) {
+                    // 有名单时，自动调整高度
+                    nameList.style.maxHeight = 'none';
+                    nameList.style.height = 'auto';
+                } else {
+                    // 无名单时，保持固定高度与右侧一致
+                    nameList.style.maxHeight = '100px';
+                    nameList.style.height = '100px';
+                }
+            }
+        }
+
+        // 初始化并定期更新
+        function initDateTimeAndCountdown() {
+            updateDateTime();
+            showRandomVerse();
+            adjustNameListHeight();
+            initFileInputListener();
+            
+            // 初始化倒计时显示
+            document.getElementById('countdown').textContent = '设置倒计时';
+            
+            setInterval(updateDateTime, 1000);
+        }
+
+        // 在页面加载完成后初始化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initDateTimeAndCountdown);
+        } else {
+            initDateTimeAndCountdown();
+        }
+    </script>
+</body>
+</html>

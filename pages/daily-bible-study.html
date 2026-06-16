@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日研经</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; background: #FFF5F7; }
+        
+        .header-bar {
+            background: linear-gradient(135deg, #FFB7C5 0%, #FFCCD5 100%);
+            padding: 20px 30px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #8B5A6B;
+        }
+        
+        .header-bar .title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .header-bar .back-link {
+            color: #8B5A6B;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .header-bar .back-link:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .main-container {
+            display: grid;
+            grid-template-columns: 250px 1fr 320px;
+            min-height: calc(100vh - 60px);
+        }
+        
+        .left-panel {
+            background: #FFFBFC;
+            border-right: 1px solid #FFE0E5;
+            padding: 15px;
+            overflow-y: auto;
+            max-height: calc(100vh - 60px);
+        }
+        
+        .left-panel h3 {
+            color: #D4758A;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FFB7C5;
+        }
+        
+        .outline-list { list-style: none; }
+        
+        .outline-list li {
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 2px;
+        }
+        
+        .outline-list li:hover { background: #FFEBF0; }
+        .outline-list li.active { background: #FFB7C5; color: #8B5A6B; }
+        
+        .center-panel {
+            background: #FFFBFC;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 60px);
+        }
+        
+        .version-tabs {
+            display: flex;
+            gap: 5px;
+            padding: 10px 15px;
+            border-bottom: 1px solid #FFE0E5;
+            background: #FFF0F3;
+        }
+        
+        .version-tab {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #8B5A6B;
+        }
+        
+        .version-tab.active { background: #FFB7C5; color: #8B5A6B; }
+        
+        .chapter-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            border-bottom: 1px solid #FFE0E5;
+        }
+        
+        .nav-btn {
+            padding: 6px 14px;
+            border: 1px solid #FFB7C5;
+            background: white;
+            cursor: pointer;
+            border-radius: 5px;
+            color: #8B5A6B;
+        }
+        
+        .nav-btn:hover { background: #FFEBF0; }
+        .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .chapter-info { font-size: 16px; font-weight: bold; color: #8B5A6B; }
+        
+        .scripture-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .scripture-content p {
+            line-height: 2;
+            margin-bottom: 12px;
+            text-indent: 2em;
+            color: #5C4050;
+        }
+        
+        .verse-number {
+            color: #D4758A;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .right-panel {
+            background: #FFF0F3;
+            border-left: 1px solid #FFE0E5;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 60px);
+        }
+        
+        .commentary-tabs {
+            display: flex;
+            gap: 5px;
+            padding: 10px 15px;
+            border-bottom: 1px solid #FFE0E5;
+        }
+        
+        .commentary-tab {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 15px;
+            font-size: 13px;
+            color: #8B5A6B;
+        }
+        
+        .commentary-tab.active { background: #FFB7C5; color: #8B5A6B; }
+        
+        .search-box {
+            padding: 10px 15px;
+            border-bottom: 1px solid #FFE0E5;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #FFB7C5;
+            border-radius: 4px;
+            font-size: 13px;
+            background: white;
+            color: #5C4050;
+        }
+        
+        .search-box button {
+            padding: 8px 16px;
+            border: none;
+            background: #FFB7C5;
+            color: #8B5A6B;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .search-box button:hover {
+            background: #FFA5B8;
+        }
+        
+        .commentary-content {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .commentary-content h4 { color: #D4758A; margin-bottom: 10px; }
+        .commentary-content p { line-height: 1.8; margin-bottom: 10px; color: #5C4050; font-size: 14px; }
+        
+        .book-selector {
+            display: flex;
+            gap: 10px;
+            padding: 10px 15px;
+            background: #FFF0F3;
+            border-bottom: 1px solid #FFE0E5;
+        }
+        
+        .book-selector select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            padding: 10px 15px;
+            background: #fafafa;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .search-box button {
+            padding: 8px 20px;
+            background: #4a69bd;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-container { grid-template-columns: 1fr 320px; }
+            .left-panel { display: none; }
+        }
+        
+        @media (max-width: 768px) {
+            .main-container { grid-template-columns: 1fr; }
+            .right-panel { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <a href="../index.html" class="back-link">← 返回首页</a>
+        <div class="title">📖 每日研经</div>
+        <div style="font-size: 14px; opacity: 0.8;">选择书卷和章节，阅读神的话语</div>
+    </div>
+
+    <div class="main-container">
+        <div class="left-panel">
+            <h3>大纲</h3>
+            <ul class="outline-list" id="outline-list">
+                <li class="active">请选择书卷和章节</li>
+            </ul>
+        </div>
+
+        <div class="center-panel">
+            <div class="book-selector">
+                <select id="testament-select" onchange="updateBookList()">
+                    <option value="old">📕 旧约</option>
+                    <option value="new">📗 新约</option>
+                </select>
+                <select id="book-select" onchange="selectBook()">
+                    <option value="">-- 请选择书卷 --</option>
+                </select>
+                <select id="chapter-select" onchange="loadChapter(parseInt(this.value))">
+                    <option value="">-- 章节 --</option>
+                </select>
+            </div>
+
+            <div class="version-tabs">
+                <button class="version-tab active" id="tab-cuv" onclick="switchVersion('cuv')">和合本</button>
+                <button class="version-tab" id="tab-lzz" onclick="switchVersion('lzz')">原文直译</button>
+                <button class="version-tab" id="tab-kjv" onclick="switchVersion('kjv')">KJV</button>
+                <button class="version-tab" id="tab-compare" onclick="switchVersion('compare')">对照</button>
+            </div>
+
+            <div class="chapter-nav">
+                <button class="nav-btn" id="prev-chapter" onclick="prevChapter()" disabled>◀ 上一章</button>
+                <span class="chapter-info" id="chapter-info">请选择书卷</span>
+                <button class="nav-btn" id="next-chapter" onclick="nextChapter()" disabled>下一章 ▶</button>
+            </div>
+
+            <div class="scripture-content" id="scripture-content">
+                <p>正在加载数据，请稍候...</p>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索经文...">
+                <button onclick="searchScripture()">查找</button>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="commentary-tabs">
+                <button class="commentary-tab active" id="tab-dictionary" onclick="switchCommentary('dictionary')">词典</button>
+                <button class="commentary-tab" id="tab-comment" onclick="switchCommentary('comment')">注释</button>
+                <button class="commentary-tab" id="tab-original" onclick="switchCommentary('original')">原文</button>
+            </div>
+            <div class="search-box" id="right-search-box">
+                <input type="text" id="right-search-input" placeholder="搜索...">
+                <button onclick="searchRightPanel()">查找</button>
+            </div>
+            <div class="commentary-content" id="commentary-content">
+                <h4>词典</h4>
+                <p>正在加载数据，请稍候...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let bibleBooks = null;
+        let cuvData = null;
+        let lzzData = null;
+        let kjvData = null;
+        let encyclopediaData = null;
+        let wordDictionaryData = null;
+        let commentaryData = null;
+        let originalData = null;
+        
+        let currentBookId = null;
+        let currentBookName = '';
+        let currentChapter = 1;
+        let totalChapters = 50;
+        let currentVersion = 'cuv';
+        let currentCommentaryType = 'dictionary';
+        
+        async function init() {
+            console.log('正在加载数据...');
+            try {
+                const [booksRes, cuvRes, lzzRes, kjvRes, encyRes, wordRes, commRes, origRes] = await Promise.all([
+                    fetch('../daily-bible-study/books_info.json'),
+                    fetch('../daily-bible-study/bible/cuv.json'),
+                    fetch('../daily-bible-study/bible/lzz.json'),
+                    fetch('../daily-bible-study/bible/kjv.json'),
+                    fetch('../daily-bible-study/dictionary/encyclopedia.json'),
+                    fetch('../daily-bible-study/dictionary/word_dictionary.json'),
+                    fetch('../daily-bible-study/annotation/commentary.json'),
+                    fetch('../daily-bible-study/original/original.json')
+                ]);
+                
+                bibleBooks = await booksRes.json();
+                cuvData = await cuvRes.json();
+                lzzData = await lzzRes.json();
+                kjvData = await kjvRes.json();
+                encyclopediaData = await encyRes.json();
+                wordDictionaryData = await wordRes.json();
+                commentaryData = await commRes.json();
+                originalData = await origRes.json();
+                
+                console.log('数据加载完成！');
+                updateBookList();
+                document.getElementById('scripture-content').innerHTML = '<p>请选择书卷开始阅读</p>';
+                document.getElementById('commentary-content').innerHTML = '<h4>词典</h4><p>请选择书卷开始阅读，这里将显示相关的词典和注释内容。</p>';
+            } catch (e) {
+                console.error('加载数据失败:', e);
+                document.getElementById('scripture-content').innerHTML = '<p>数据加载失败，请检查文件是否存在。</p>';
+            }
+        }
+
+        function updateBookList() {
+            if (!bibleBooks) return;
+            
+            const testament = document.getElementById('testament-select').value;
+            const books = testament === 'old' ? bibleBooks.oldTestament : bibleBooks.newTestament;
+            
+            document.getElementById('book-select').innerHTML = 
+                '<option value="">-- 请选择书卷 --</option>' +
+                books.map(book => `<option value="${book.id}|${book.name}">${book.shortName || book.name}</option>`).join('');
+            
+            document.getElementById('chapter-select').innerHTML = '<option value="">-- 章节 --</option>';
+        }
+
+        function selectBook() {
+            const selected = document.getElementById('book-select').value;
+            if (!selected) return;
+
+            const [bookId, bookName] = selected.split('|');
+            currentBookId = parseInt(bookId);
+            currentBookName = bookName;
+
+            const allBooks = [...bibleBooks.oldTestament, ...bibleBooks.newTestament];
+            const bookInfo = allBooks.find(b => parseInt(b.id) === currentBookId);
+            
+            const key = `${currentBookId}_${currentBookName}`;
+            if (cuvData && cuvData[key]) {
+                totalChapters = Math.max(...Object.keys(cuvData[key]).map(Number));
+            } else {
+                totalChapters = bookInfo ? bookInfo.chapters : 50;
+            }
+
+            let chapterOptions = '';
+            for (let i = 1; i <= totalChapters; i++) {
+                chapterOptions += `<option value="${i}">第${i}章</option>`;
+            }
+            document.getElementById('chapter-select').innerHTML = chapterOptions;
+
+            currentChapter = 1;
+            loadChapter(1);
+        }
+
+        function getVersesFromData(data, bookId, chapter) {
+            const key = `${bookId}_${currentBookName}`;
+            if (data && data[key] && data[key][chapter]) {
+                return data[key][chapter];
+            }
+            return [];
+        }
+
+        function loadChapter(chapter) {
+            if (!currentBookId) return;
+
+            currentChapter = chapter;
+            
+            document.getElementById('chapter-info').textContent = `${currentBookName} 第${chapter}章`;
+            document.getElementById('prev-chapter').disabled = chapter <= 1;
+            document.getElementById('next-chapter').disabled = chapter >= totalChapters;
+            document.getElementById('chapter-select').value = chapter;
+
+            let verses = [];
+            let dataSource = null;
+            
+            if (currentVersion === 'cuv') {
+                verses = getVersesFromData(cuvData, currentBookId, chapter);
+                dataSource = cuvData;
+            } else if (currentVersion === 'lzz') {
+                verses = getVersesFromData(lzzData, currentBookId, chapter);
+                if (verses.length === 0) {
+                    verses = getVersesFromData(cuvData, currentBookId, chapter);
+                }
+                dataSource = lzzData;
+            } else if (currentVersion === 'kjv') {
+                verses = getVersesFromData(kjvData, currentBookId, chapter);
+                dataSource = kjvData;
+            } else if (currentVersion === 'compare') {
+                verses = getVersesFromData(cuvData, currentBookId, chapter);
+                dataSource = cuvData;
+            }
+
+            if (verses.length > 0) {
+                displayScripture(verses);
+            } else {
+                document.getElementById('scripture-content').innerHTML = 
+                    `<p>暂无该章节经文数据（${currentBookName} 第${chapter}章）</p>`;
+            }
+
+            updateOutline();
+            updateCommentary();
+        }
+
+        function displayScripture(verses) {
+            const container = document.getElementById('scripture-content');
+            
+            if (currentVersion === 'compare') {
+                let html = '';
+                const cuvVerses = getVersesFromData(cuvData, currentBookId, currentChapter);
+                const kjvVerses = getVersesFromData(kjvData, currentBookId, currentChapter);
+                const lzzVerses = getVersesFromData(lzzData, currentBookId, currentChapter);
+                
+                verses.forEach((v, i) => {
+                    const cuvVerse = cuvVerses.find(x => x.verse === v.verse);
+                    const kjvVerse = kjvVerses.find(x => x.verse === v.verse);
+                    const lzzVerse = lzzVerses.find(x => x.verse === v.verse);
+                    const cuvText = cuvVerse ? cuvVerse.text : '暂无';
+                    const kjvText = kjvVerse ? kjvVerse.text : '暂无';
+                    const lzzText = lzzVerse ? lzzVerse.text : '暂无';
+                    
+                    html += `
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #eee;">
+                            <div>
+                                <span style="color: #4a69bd; font-weight: bold; font-size: 12px;">和合本</span>
+                                <span class="verse-number">${v.verse}</span>${cuvText}
+                            </div>
+                            <div style="color: #666;">
+                                <span style="color: #27ae60; font-weight: bold; font-size: 12px;">吕振中</span>
+                                <span class="verse-number">${v.verse}</span>${lzzText}
+                            </div>
+                            <div style="color: #666;">
+                                <span style="color: #e74c3c; font-weight: bold; font-size: 12px;">KJV</span>
+                                <span class="verse-number">${v.verse}</span>${kjvText}
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = verses.map(v => 
+                    `<p><span class="verse-number">${v.verse}</span>${v.text}</p>`
+                ).join('');
+            }
+        }
+
+        function switchVersion(version) {
+            currentVersion = version;
+            document.querySelectorAll('.version-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`tab-${version}`).classList.add('active');
+            
+            if (currentChapter && currentBookId) loadChapter(currentChapter);
+        }
+
+        function switchCommentary(type) {
+            currentCommentaryType = type;
+            document.querySelectorAll('.commentary-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`tab-${type}`).classList.add('active');
+            updateCommentary();
+        }
+
+        function updateCommentary() {
+            const container = document.getElementById('commentary-content');
+            let titleMap = {
+                'dictionary': '词典',
+                'comment': '注释',
+                'original': '原文'
+            };
+            
+            let html = `<h4>${titleMap[currentCommentaryType] || currentCommentaryType}</h4>`;
+            
+            if (!currentBookId) {
+                html += `<p>请选择书卷开始阅读，这里将显示相关内容。</p>`;
+            } else {
+                if (currentCommentaryType === 'dictionary') {
+                    html += `<p><strong>书卷：</strong>${currentBookName}</p>`;
+                    html += `<p><strong>章节：</strong>第${currentChapter}章</p>`;
+                    html += `<div style="margin-top: 15px; padding: 15px; background: #fff; border-radius: 8px;">`;
+                    
+                    let hasValidData = false;
+                    let displayedWords = [];
+                    
+                    for (let word in encyclopediaData) {
+                        if (displayedWords.length >= 10) break;
+                        let desc = encyclopediaData[word].description;
+                        if (desc && desc.length > 0 && !desc.includes('IWMsz') && !desc.includes('CX0k')) {
+                            displayedWords.push({word: encyclopediaData[word].word || word, desc: desc});
+                            hasValidData = true;
+                        }
+                    }
+                    
+                    for (let word in wordDictionaryData) {
+                        if (displayedWords.length >= 15) break;
+                        if (!encyclopediaData[word]) {
+                            let desc = wordDictionaryData[word].description;
+                            if (desc && desc.length > 0 && !desc.includes('CX0k')) {
+                                displayedWords.push({word: wordDictionaryData[word].word || word, desc: desc});
+                                hasValidData = true;
+                            }
+                        }
+                    }
+                    
+                    if (hasValidData && displayedWords.length > 0) {
+                        for (let item of displayedWords) {
+                            html += `<p><strong>${item.word}：</strong>${item.desc.substring(0, 200)}${item.desc.length > 200 ? '...' : ''}</p>`;
+                        }
+                    } else {
+                        html += `<p style="color: #e74c3c;">词典数据需要特殊解密算法才能显示。</p>
+                                <p style="font-size: 13px; color: #999; margin-top: 10px;">提示：这是主内圣经的加密数据，需要使用其专用阅读器才能解密。</p>`;
+                    }
+                    
+                    html += `</div>`;
+                } else if (currentCommentaryType === 'comment') {
+                    html += `<p><strong>书卷：</strong>${currentBookName}</p>`;
+                    html += `<p><strong>章节：</strong>第${currentChapter}章</p>`;
+                    const key = `${currentBookId}_${currentBookName}`;
+                    
+                    let hasValidComment = false;
+                    if (commentaryData && commentaryData[key] && commentaryData[key][currentChapter]) {
+                        const comments = commentaryData[key][currentChapter];
+                        for (let c of comments) {
+                            if (c.text && c.text.length > 0 && !c.text.includes('IWMsz') && !c.text.includes('CX0k')) {
+                                hasValidComment = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (hasValidComment && commentaryData[key] && commentaryData[key][currentChapter]) {
+                        const comments = commentaryData[key][currentChapter];
+                        for (let c of comments) {
+                            if (c.text && !c.text.includes('IWMsz')) {
+                                let verseRange = c.from_verse === c.to_verse ? `${c.from_verse}节` : `${c.from_verse}-${c.to_verse}节`;
+                                html += `<div style="margin-top: 15px; background: #fff; padding: 15px; border-radius: 8px;">
+                                    <strong style="color: #4a69bd;">${verseRange}：</strong>${c.text.substring(0, 500)}${c.text.length > 500 ? '...' : ''}
+                                </div>`;
+                            }
+                        }
+                    } else {
+                        html += `<div style="margin-top: 15px; padding: 15px; background: #fff; border-radius: 8px;">
+                            <p style="color: #e74c3c;">注释数据需要特殊解密算法才能显示。</p>
+                            <p style="font-size: 13px; color: #999; margin-top: 10px;">提示：这是主内圣经的加密数据，需要使用其专用阅读器才能解密。</p>
+                        </div>`;
+                    }
+                } else if (currentCommentaryType === 'original') {
+                    html += `<p><strong>书卷：</strong>${currentBookName}</p>`;
+                    html += `<p><strong>章节：</strong>第${currentChapter}章</p>`;
+                    
+                    let originalHtml = `<div style="margin-top: 15px; font-family: 'Times New Roman', serif;">`;
+                    let count = 0;
+                    
+                    for (let key in originalData) {
+                        const item = originalData[key];
+                        if (item.text && item.text.length > 0) {
+                            count++;
+                            originalHtml += `<div style="background: white; padding: 12px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid #4a69bd;">
+                                <div style="color: #4a69bd; font-weight: bold; margin-bottom: 6px;">
+                                    <span style="font-size: 12px; background: #4a69bd; color: white; padding: 2px 8px; border-radius: 10px; margin-right: 10px;">#${count}</span>
+                                    ${item.id || key}
+                                </div>`;
+                            if (item.text) originalHtml += `<p style="margin: 5px 0; color: #333; line-height: 1.8;">${item.text}</p>`;
+                            if (item.original) originalHtml += `<p style="margin: 5px 0; color: #666; line-height: 1.8; direction: rtl; text-align: right;">${item.original}</p>`;
+                            if (item.original_fhl) originalHtml += `<p style="margin: 5px 0; color: #666; line-height: 1.8; direction: rtl; text-align: right;">${item.original_fhl}</p>`;
+                            originalHtml += `</div>`;
+                        }
+                        if (count >= 20) break;
+                    }
+                    
+                    if (count === 0) {
+                        originalHtml += `<p style="color: #666;">暂无原文数据。</p>`;
+                    }
+                    
+                    originalHtml += `</div>`;
+                    html += originalHtml;
+                }
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function updateOutline() {
+            const list = document.getElementById('outline-list');
+            
+            if (!currentBookId) {
+                list.innerHTML = `<li class="active">请选择书卷和章节</li>`;
+                return;
+            }
+            
+            let outlineItems = `
+                <li class="active">${currentBookName} 第${currentChapter}章</li>
+            `;
+            
+            const key = `${currentBookId}_${currentBookName}`;
+            if (cuvData && cuvData[key] && cuvData[key][currentChapter]) {
+                const verses = cuvData[key][currentChapter];
+                for (let i = 0; i < Math.min(5, verses.length); i++) {
+                    let preview = verses[i].text.substring(0, 20) + '...';
+                    outlineItems += `<li>${verses[i].verse}节 ${preview}</li>`;
+                }
+            }
+            
+            list.innerHTML = outlineItems;
+        }
+
+        function prevChapter() { 
+            if (currentChapter > 1) loadChapter(currentChapter - 1); 
+        }
+        
+        function nextChapter() { 
+            if (currentChapter < totalChapters) loadChapter(currentChapter + 1); 
+        }
+        
+        function searchScripture() { 
+            const query = document.getElementById('search-input').value;
+            if (query.trim()) {
+                alert(`搜索功能开发中...\n搜索词：${query}`);
+            }
+        }
+        
+        function searchRightPanel() {
+            const query = document.getElementById('right-search-input').value;
+            if (!query.trim()) {
+                updateCommentary();
+                return;
+            }
+            
+            const container = document.getElementById('commentary-content');
+            const q = query.trim().toLowerCase();
+            
+            let html = `<h4>搜索结果: "${escapeHtml(query)}"</h4>`;
+            
+            if (currentCommentaryType === 'dictionary') {
+                let found = [];
+                for (let word in encyclopediaData) {
+                    if (word.toLowerCase().includes(q) || (encyclopediaData[word].description && encyclopediaData[word].description.toLowerCase().includes(q))) {
+                        found.push(encyclopediaData[word]);
+                    }
+                }
+                for (let word in wordDictionaryData) {
+                    if (word.toLowerCase().includes(q) || (wordDictionaryData[word].description && wordDictionaryData[word].description.toLowerCase().includes(q))) {
+                        if (!encyclopediaData[word]) {
+                            found.push(wordDictionaryData[word]);
+                        }
+                    }
+                }
+                
+                if (found.length > 0) {
+                    html += `<p style="margin-top: 10px; color: #666;">找到 ${found.length} 个结果</p>`;
+                    html += `<div style="margin-top: 15px;">`;
+                    found.slice(0, 20).forEach(item => {
+                        const desc = item.description;
+                        const isEncrypted = desc && (desc.includes('IWMsz') || desc.includes('CX0k'));
+                        html += `<div style="background: white; padding: 12px; margin-bottom: 8px; border-radius: 8px;">
+                            <strong style="color: #4a69bd;">${item.word}：</strong>
+                            ${isEncrypted ? '<span style="color: #999;">[加密数据]</span>' : (desc || '').substring(0, 300)}
+                        </div>`;
+                    });
+                    html += `</div>`;
+                } else {
+                    html += `<p style="margin-top: 15px; color: #999;">没有找到相关结果</p>`;
+                }
+            } else if (currentCommentaryType === 'original') {
+                let found = [];
+                for (let key in originalData) {
+                    const item = originalData[key];
+                    if ((item.text && item.text.toLowerCase().includes(q)) || (item.id && item.id.toLowerCase().includes(q))) {
+                        found.push({ ...item, key });
+                    }
+                }
+                
+                if (found.length > 0) {
+                    html += `<p style="margin-top: 10px; color: #666;">找到 ${found.length} 个结果</p>`;
+                    html += `<div style="margin-top: 15px; font-family: 'Times New Roman', serif;">`;
+                    found.slice(0, 20).forEach((item, idx) => {
+                        html += `<div style="background: white; padding: 12px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid #4a69bd;">
+                            <div style="color: #4a69bd; font-weight: bold; margin-bottom: 6px;">
+                                <span style="font-size: 12px; background: #4a69bd; color: white; padding: 2px 8px; border-radius: 10px; margin-right: 10px;">#${idx+1}</span>
+                                ${item.id || item.key}
+                            </div>`;
+                        if (item.text) html += `<p style="margin: 5px 0; color: #333; line-height: 1.8;">${item.text}</p>`;
+                        if (item.original) html += `<p style="margin: 5px 0; color: #666; line-height: 1.8; direction: rtl; text-align: right;">${item.original}</p>`;
+                        html += `</div>`;
+                    });
+                    html += `</div>`;
+                } else {
+                    html += `<p style="margin-top: 15px; color: #999;">没有找到相关结果</p>`;
+                }
+            } else {
+                html += `<p style="margin-top: 15px; color: #666;">注释搜索功能暂不支持</p>`;
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        init();
+    </script>
+</body>
+</html>
