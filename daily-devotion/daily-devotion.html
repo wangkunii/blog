@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>每日灵修</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .study-container {
+            max-width: 95%;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        .study-header {
+            background: linear-gradient(135deg, #E63946 0%, #FFD166 50%, #2A9D8F 100%);
+            color: #FFFFFF;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 30px rgba(230, 57, 70, 0.4);
+        }
+
+        .study-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .study-header p {
+            margin: 0;
+            opacity: 0.95;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* 返回首页按钮 */
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #1D3557, #2A9D8F);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(29, 53, 87, 0.4);
+            margin-bottom: 20px;
+        }
+
+        .back-home:hover {
+            background: linear-gradient(135deg, #E63946, #FFD166);
+            transform: translateX(-5px);
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+        }
+
+        /* 主内容区 */
+        .main-content {
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+
+        /* 日期导航 */
+        .date-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn {
+            background: #E63946;
+            color: white;
+            border: 2px solid #FFD166;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-btn:hover {
+            background: #1D3557;
+            transform: translateY(-2px);
+            border-color: #E63946;
+        }
+
+        .current-date {
+            font-size: 1.4rem;
+            color: #E63946;
+            font-weight: 700;
+        }
+
+        .current-date span {
+            color: #1D3557;
+            font-size: 1.8rem;
+        }
+
+        /* 经文卡片 */
+        .verse-card {
+            background: linear-gradient(135deg, #FFFAF0 0%, #FFE8A3 100%);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #E63946;
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.15);
+        }
+
+        .verse-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            color: #1D3557;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .verse-reference {
+            text-align: right;
+            color: #E63946;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        /* 灵修心得 */
+        .devotion-card {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border-left: 5px solid #2A9D8F;
+            box-shadow: 0 4px 15px rgba(42, 157, 143, 0.2);
+        }
+
+        .devotion-content {
+            font-size: 1.1rem;
+            line-height: 2;
+            color: #444;
+        }
+
+        .devotion-content p {
+            margin-bottom: 15px;
+            text-indent: 2em;
+        }
+
+        .devotion-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 每日灵修模块 */
+        .daily-devotion-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #E63946;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #FFD166;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        /* 灵修书籍选择 */
+        .books-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 30px;
+        }
+
+        .books-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .book-select-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .book-select-container select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 18px;
+            border: 2px solid #1D3557;
+            border-radius: 10px;
+            font-size: 14px;
+            background: white;
+            color: #1D3557;
+            cursor: pointer;
+            font-weight: 600;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231D3557' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+        }
+
+        .book-select-container button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #E63946, #FFD166);
+            color: white;
+            border: 2px solid #FFD166;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(230, 57, 70, 0.25);
+        }
+
+        .date-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .date-picker-container label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .date-picker-container input[type="date"] {
+            padding: 10px 15px;
+            border: 2px solid #1D3557;
+            border-radius: 10px;
+            font-size: 14px;
+            background: white;
+            color: #1D3557;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .date-picker-container button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #1D3557, #2A9D8F);
+            color: white;
+            border: 2px solid #FFD166;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(29, 53, 87, 0.25);
+        }
+
+        .date-picker-container button:hover {
+            background: linear-gradient(135deg, #E63946, #FFD166);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+        }
+
+        .book-select-container button:hover {
+            background: linear-gradient(135deg, #1D3557, #2A9D8F);
+            transform: translateY(-2px);
+        }
+
+        .book-content {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #FFFAF0, #FFE8A3);
+            border-radius: 12px;
+            border-left: 5px solid #2A9D8F;
+            box-shadow: 0 4px 15px rgba(42, 157, 143, 0.15);
+        }
+
+        .book-content h4 {
+            color: #1D3557;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .book-verse {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .book-reference {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .book-text {
+            font-size: 0.95rem;
+            line-height: 1.9;
+            color: #444;
+            text-indent: 2em;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .current-date {
+                font-size: 1.1rem;
+            }
+            
+            .current-date span {
+                font-size: 1.4rem;
+            }
+            
+            .date-nav {
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .nav-btn {
+                padding: 8px 18px;
+                font-size: 0.85rem;
+            }
+            
+            .verse-card, .devotion-card {
+                padding: 20px;
+            }
+            
+            .verse-text {
+                font-size: 1.2rem;
+            }
+            
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="devotion">
+    <div class="container">
+        <a href="../index.html" class="back-home">← 返回首页</a>
+        
+        <div class="study-container">
+            <div class="study-header">
+                <h1>📖 每日灵修</h1>
+                <p>以基督为中心的心灵喂养</p>
+            </div>
+
+            <!-- 主内容区 -->
+            <div class="main-content">
+                <!-- 日期导航 -->
+                <div class="date-nav">
+                    <button class="nav-btn" onclick="prevDay()">← 上一天</button>
+                    <div class="current-date">
+                        <span id="current-date-display"></span>
+                    </div>
+                    <button class="nav-btn" onclick="nextDay()">下一天 →</button>
+                </div>
+
+                <!-- 上部模块：当日经文 -->
+                <div class="daily-devotion-section">
+                    <h3 class="section-title">📖 每日经文</h3>
+                    <!-- 经文卡片 -->
+                    <div class="verse-card">
+                        <div class="verse-text" id="verse-text"></div>
+                        <div class="verse-reference" id="verse-reference"></div>
+                    </div>
+                </div>
+
+                <!-- 下部模块：选择灵修书籍 -->
+                <div class="books-section">
+                    <h3 class="section-title">📚 灵修书籍</h3>
+                    <div class="book-select-container">
+                        <select id="book-select">
+                            <option value="">-- 请选择灵修书籍 --</option>
+                            <option value="daily-manna">📖 每日天粮</option>
+                            <option value="daily-spring">💧 每日甘泉</option>
+                            <option value="morning-dew">🌿 清晨甘露</option>
+                            <option value="streams">⛲ 活水</option>
+                            <option value="streams3">⛲ 活水（三）</option>
+                            <option value="my-utmost">🔥 竭诚为主</option>
+                            <option value="desert-springs">🏜️ 荒漠甘泉</option>
+                            <option value="night-light">🌙 静夜亮光</option>
+                            <option value="flower-path">🌸 花香满径</option>
+                            <option value="great-prayer">🙏 伟大心灵的祷告</option>
+                            <option value="daily-food">🍞 日用的饮食</option>
+                            <option value="wilderness-feast">🏕️ 旷野的筵席</option>
+                            <option value="daily-proverb">📜 每日箴言</option>
+                            <option value="prayer-walk">🚶 每日箴言-与耶稣同行</option>
+                            <option value="devotion-class">📚 灵修日课</option>
+                            <option value="daily-bread">🍖 灵命日粮</option>
+                            <option value="life-quotes">💬 生命隽语</option>
+                            <option value="truth-analysis">🔍 真道分解</option>
+                            <option value="heaven-talk">☁️ 说地谈天</option>
+                            <option value="bible-figure">👥 默想圣经人物</option>
+                        </select>
+                        <button onclick="loadSelectedBook()">加载内容</button>
+                    </div>
+                    <!-- 独立日期选择器 -->
+                    <div class="date-picker-container">
+                        <label for="devotion-date">选择日期：</label>
+                        <input type="date" id="devotion-date" value="">
+                        <button onclick="loadBookByDate()">按日期加载</button>
+                    </div>
+                    <!-- 灵修心得内容（根据选择的书籍显示） -->
+                    <div class="devotion-card" id="devotion-card" style="display: none;">
+                        <div class="devotion-content" id="devotion-content"></div>
+                    </div>
+                    <div class="book-content" id="book-content" style="display: none;">
+                        <h4 id="book-title"></h4>
+                        <div class="book-verse" id="book-verse"></div>
+                        <div class="book-reference" id="book-reference"></div>
+                        <div class="book-text" id="book-text"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/sql.js@1.10.3/dist/sql-wasm.js"></script>
+    <script>
+        // 当前日期
+        let currentDate = new Date();
+        let devotionsData = null;
+        let db = null;
+
+        // 加载灵修数据
+        async function loadDevotionsData() {
+            try {
+                const response = await fetch('../daily-bible-study/devotions_full.json');
+                if (!response.ok) {
+                    throw new Error('无法加载灵修数据');
+                }
+                devotionsData = await response.json();
+            } catch (error) {
+                console.error('加载灵修数据失败:', error);
+            }
+        }
+
+        // 默认灵修内容（30条，每条50-100字）
+        const defaultDevotions = [
+            {
+                verse: '你们要思念上面的事，不要思念地上的事。因为你们已经死了，你们的生命与基督一同藏在神里面。',
+                reference: '歌罗西书 3:2-3',
+                content: '今天让我们专注于属灵的事物。我们的生命已经与基督一同藏在神里面，这是何等宝贵的应许。让我们在日常生活中，时刻思想神的话语，追求与神更亲近的关系，让基督的生命在我们里面彰显。'
+            },
+            {
+                verse: '我靠着那加给我力量的，凡事都能做。',
+                reference: '腓立比书 4:13',
+                content: '我们的力量来自上帝，当我们感到软弱时，正是上帝彰显他能力的时候。无论面对什么挑战，都要相信神的力量会帮助我们克服，让我们在困难中经历他的恩典和同在。'
+            },
+            {
+                verse: '神爱世人，甚至将他的独生子赐给他们，叫一切信他的，不至灭亡，反得永生。',
+                reference: '约翰福音 3:16',
+                content: '上帝的爱是如此伟大，他赐下独生子为我们舍命。这份爱是无条件的，是永恒的。让我们每天都思想这份爱，以感恩的心回应神，将这份爱分享给身边的人。'
+            },
+            {
+                verse: '凡劳苦担重担的人，可以到我这里来，我就使你们得安息。',
+                reference: '马太福音 11:28',
+                content: '耶稣邀请所有疲惫的人来到他面前，他会赐给我们安息。无论你现在背负着什么重担，都可以来到耶稣面前，将重担交给他，在他里面找到真正的平安和休息。'
+            },
+            {
+                verse: '不要为明天忧虑，因为明天自有明天的忧虑；一天的难处一天当就够了。',
+                reference: '马太福音 6:34',
+                content: '每一天都有足够的难处，让我们活在当下，相信上帝会带领我们走过每一天。不要为未来担忧，专注于今天的功课，将每一天都交托给神，相信他的带领。'
+            },
+            {
+                verse: '我就是道路、真理、生命；若不藉着我，没有人能到父那里去。',
+                reference: '约翰福音 14:6',
+                content: '耶稣是我们人生道路的指引，是真理的源头，是生命的活水。让我们跟随耶稣的脚步，行在真理中，活出丰盛的生命，每天与他亲近，聆听他的话语。'
+            },
+            {
+                verse: '你们要先求他的国和他的义，这些东西都要加给你们了。',
+                reference: '马太福音 6:33',
+                content: '将上帝的国放在首位，其他一切都会加给我们。让我们以神的事为念，追求他的荣耀，在生活中彰显他的国，相信他会供应我们一切所需。'
+            },
+            {
+                verse: '信靠耶和华是智慧的开端，认识至圣者便是聪明。',
+                reference: '箴言 9:10',
+                content: '真正的智慧始于认识上帝，信靠他的指引。让我们在人生的道路上，不断寻求神的智慧，走在他的真理中，成为有智慧的人。'
+            },
+            {
+                verse: '你们要完全，像你们的天父完全一样。',
+                reference: '马太福音 5:48',
+                content: '追求圣洁是基督徒一生的追求，虽然不完全，但要不断努力，效法天父的完全。让我们在生活中追求圣洁，成为圣洁的子民，荣耀神的名。'
+            },
+            {
+                verse: '人若喝我所赐的水就永远不渴；我所赐的水要在他里头成为泉源，直涌到永生。',
+                reference: '约翰福音 4:14',
+                content: '耶稣赐予的活水能满足我们灵魂最深的饥渴。让我们来到耶稣面前，领受这生命的活水，使我们的灵魂得到满足，成为永不干涸的泉源。'
+            },
+            {
+                verse: '你们要彼此接纳，如同基督接纳你们一样。',
+                reference: '罗马书 15:7',
+                content: '在基督里，我们都是一家人，要彼此包容接纳。每一个人都有不同的恩赐和特点，但我们都是基督身体的一部分，要彼此相爱，互相扶持。'
+            },
+            {
+                verse: '爱能遮掩许多的罪。',
+                reference: '箴言 10:12',
+                content: '爱是最伟大的力量，能够遮盖和饶恕他人的过错。让我们以爱心对待他人，用爱遮盖他人的缺点，成为和平的使者，传递神的爱。'
+            },
+            {
+                verse: '万事都互相效力，叫爱神的人得益处。',
+                reference: '罗马书 8:28',
+                content: '即使在困难中，上帝也在工作，为我们的益处预备一切。相信神的安排，万事都有他的美意，让我们在信心中前行，经历他的恩典。'
+            },
+            {
+                verse: '他必像一棵树栽在溪水旁，按时候结果子，叶子也不枯干。',
+                reference: '诗篇 1:3',
+                content: '扎根在上帝话语中的人，必能结出美好的果实。让我们将自己的生命扎根在神的话语中，这样无论遇到什么环境，都能站立得稳，结出丰盛的果实。'
+            },
+            {
+                verse: '你们要谨慎，免得有人用他的理学和虚空的妄言，不照着基督，就把你们掳去。',
+                reference: '歌罗西书 2:8',
+                content: '要谨慎分辨真理与谬误，坚守基督的真理，不被虚假的道理迷惑。让我们以神的话语为标准，检验一切的教导，持守纯正的信仰。'
+            },
+            {
+                verse: '你们要追求与众人和睦，并要追求圣洁；非圣洁没有人能见主。',
+                reference: '希伯来书 12:14',
+                content: '追求和睦与圣洁是我们的使命。没有圣洁，没有人能够见主。让我们谨慎自守，避免被罪恶所污染，保持心灵的纯洁。'
+            },
+            {
+                verse: '非因行为，乃是因信称义。',
+                reference: '罗马书 3:28',
+                content: '我们的得救是出于信心，不是靠行为。神的救恩是白白赐给我们的礼物。让我们以感恩的心领受这份恩典，并活出美好的生命。'
+            },
+            {
+                verse: '我们若认自己的罪，神是信实的，是公义的，必要赦免我们的罪，洗净我们一切的不义。',
+                reference: '约翰一书 1:9',
+                content: '神是信实的，只要我们认罪，他就必定赦免我们的罪。让我们时常省察自己，勇敢地来到神面前，承认自己的过犯，领受他的赦免和洁净。'
+            },
+            {
+                verse: '神就是爱，住在爱里面的，就是住在神里面，神也住在他里面。',
+                reference: '约翰一书 4:16',
+                content: '神就是爱的本体，住在爱里就是住在神里面。真正的爱神必然会表现为爱人。让我们用行动来证明我们的爱，爱神也爱我们的邻舍。'
+            },
+            {
+                verse: '你们要将一切的忧虑卸给神，因为他顾念你们。',
+                reference: '彼得前书 5:7',
+                content: '将所有的忧虑交给上帝，他必看顾我们。不要独自承担重担，相信神的信实和慈爱，将一切忧虑交托给他。'
+            },
+            {
+                verse: '你们要以祈祷、感谢，将你们所要的告诉神。',
+                reference: '腓立比书 4:6',
+                content: '凡事借着祷告和感谢，将我们的需求告诉上帝。神会赐给我们出人意外的平安，保守我们的心怀意念。让我们时刻保持祷告的生活。'
+            },
+            {
+                verse: '我总不撇下你，也不丢弃你。',
+                reference: '希伯来书 13:5',
+                content: '上帝的应许是可靠的，他永远不会离开我们。无论遇到什么困难，都要相信神与我们同在，他是我们的帮助者和保护者。'
+            },
+            {
+                verse: '你们要喜乐，我再说，你们要喜乐。',
+                reference: '腓立比书 4:4',
+                content: '在任何环境中都要喜乐，因为上帝与我们同在。让我们保持喜乐的心，成为他人的祝福，彰显神的荣耀。'
+            },
+            {
+                verse: '你们要彼此劝勉，互相建立。',
+                reference: '帖撒罗尼迦前书 5:11',
+                content: '彼此鼓励，共同成长，建立基督的身体。让我们在信仰路上互相扶持，彼此勉励，一同成长。'
+            },
+            {
+                verse: '你们要思念这些事。',
+                reference: '腓立比书 4:8',
+                content: '专注于美好的、真实的、可敬的事物。让我们的思想专注于神的话语和美好的事物，远离负面和邪恶的思想。'
+            },
+            {
+                verse: '神的道是活泼的，是有功效的。',
+                reference: '希伯来书 4:12',
+                content: '上帝的话语是有能力的，能够改变我们的生命。让我们每天阅读神的话语，让它在我们里面动工，改变我们的生命。'
+            },
+            {
+                verse: '你们要谨慎自守，警醒祷告。',
+                reference: '彼得前书 4:7',
+                content: '时刻保持警醒，不断祷告。让我们在属灵上保持警醒，时刻与神亲近，不被世界的诱惑所迷惑。'
+            },
+            {
+                verse: '凡称呼我主啊，主啊的人，不能都进天国；惟独遵行我天父旨意的人，才能进去。',
+                reference: '马太福音 7:21',
+                content: '真正的信仰不仅是口头上的承认，更是行为上的顺服。让我们不仅口里称耶稣为主，更要在生活中遵行他的旨意。'
+            },
+            {
+                verse: '你们要进窄门。因为引到灭亡，那门是宽的，路是大的，进去的人也多；引到永生，那门是窄的，路是小的，找着的人也少。',
+                reference: '马太福音 7:13-14',
+                content: '跟随耶稣的道路可能是窄的，但却是通往永生的道路。让我们选择走窄路，跟随耶稣，追求永恒的生命。'
+            },
+            {
+                verse: '施比受更为有福。',
+                reference: '使徒行传 20:35',
+                content: '给予比接受更能带来真正的满足和祝福。让我们学会付出和奉献，成为他人的祝福，体验给予的快乐。'
+            }
+        ];
+
+        // 灵修书籍
+        const devotionBooks = [
+            { id: 'daily-manna', name: '每日天粮', icon: '📖' },
+            { id: 'daily-spring', name: '每日甘泉', icon: '💧' },
+            { id: 'morning-dew', name: '清晨甘露', icon: '🌿' },
+            { id: 'streams', name: '活水', icon: '⛲' },
+            { id: 'my-utmost', name: '竭诚为主', icon: '🔥' },
+            { id: 'desert-springs', name: '荒漠甘泉', icon: '🏜️' },
+            { id: 'night-light', name: '静夜亮光', icon: '🌙' },
+            { id: 'flower-path', name: '花香满径', icon: '🌸' }
+        ];
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadDailyVerses();
+            await loadBooksData();
+            updateDateDisplay();
+            loadDevotion();
+            
+            // 设置日期选择器默认值为今天
+            const today = new Date();
+            const dateStr = today.toISOString().split('T')[0];
+            document.getElementById('devotion-date').value = dateStr;
+        });
+
+        // 更新日期显示
+        function updateDateDisplay() {
+            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const monthNames = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+            const dateStr = `${currentDate.getFullYear()}年${monthNames[currentDate.getMonth()]}${currentDate.getDate()}日 ${weekdays[currentDate.getDay()]}`;
+            document.getElementById('current-date-display').textContent = dateStr;
+        }
+
+        // 上一天
+        function prevDay() {
+            currentDate.setDate(currentDate.getDate() - 1);
+            updateDateDisplay();
+            loadDevotion();
+        }
+
+        // 下一天
+        function nextDay() {
+            currentDate.setDate(currentDate.getDate() + 1);
+            updateDateDisplay();
+            loadDevotion();
+        }
+
+        // 365天经文数据
+        let dailyVersesData = null;
+
+        // 加载365天经文数据
+        async function loadDailyVerses() {
+            try {
+                const response = await fetch('../daily-bible-study/daily_verses.json');
+                if (!response.ok) {
+                    throw new Error('无法加载365天经文数据');
+                }
+                const data = await response.json();
+                dailyVersesData = data.verses;
+            } catch (error) {
+                console.error('加载365天经文数据失败:', error);
+            }
+        }
+
+        // 加载当日经文
+        async function loadDevotion() {
+            if (!dailyVersesData) {
+                await loadDailyVerses();
+            }
+            
+            const month = currentDate.getMonth() + 1;
+            const day = currentDate.getDate();
+            
+            // 从365天数据中查找
+            const todayVerse = dailyVersesData?.find(v => v.month === month && v.day === day);
+            
+            if (todayVerse) {
+                document.getElementById('verse-text').textContent = todayVerse.verse;
+                document.getElementById('verse-reference').textContent = todayVerse.reference;
+            } else {
+                // 使用默认数据
+                const dayOfYear = Math.floor((currentDate - new Date(currentDate.getFullYear(), 0, 0)) / 86400000);
+                const defaultIndex = dayOfYear % defaultDevotions.length;
+                const defaultDevotion = defaultDevotions[defaultIndex];
+                
+                document.getElementById('verse-text').textContent = defaultDevotion.verse;
+                document.getElementById('verse-reference').textContent = defaultDevotion.reference;
+            }
+            
+            document.getElementById('devotion-card').style.display = 'none';
+            document.getElementById('book-content').style.display = 'none';
+        }
+
+        let booksData = null;
+
+        // 加载灵修书籍数据
+        async function loadBooksData() {
+            try {
+                const response = await fetch('../daily-devotion/devotion.json');
+                if (!response.ok) {
+                    throw new Error('无法加载灵修书籍数据');
+                }
+                booksData = await response.json();
+            } catch (error) {
+                console.error('加载灵修书籍数据失败:', error);
+            }
+        }
+
+        // 加载选中的灵修书籍内容
+        async function loadSelectedBook() {
+            const bookId = document.getElementById('book-select').value;
+            if (!bookId) {
+                document.getElementById('devotion-card').style.display = 'none';
+                document.getElementById('book-content').style.display = 'none';
+                return;
+            }
+
+            if (!booksData) {
+                await loadBooksData();
+            }
+
+            const bookData = booksData[bookId];
+            if (!bookData) {
+                document.getElementById('devotion-card').style.display = 'none';
+                document.getElementById('book-content').style.display = 'none';
+                return;
+            }
+
+            const month = currentDate.getMonth() + 1;
+            const day = currentDate.getDate();
+            
+            // 从数据库读取内容
+            await loadFromDatabase(bookData.dbFile, bookData.name, month, day);
+        }
+
+        // 按日期选择器加载灵修书籍内容
+        async function loadBookByDate() {
+            const bookId = document.getElementById('book-select').value;
+            const dateStr = document.getElementById('devotion-date').value;
+            
+            if (!bookId) {
+                alert('请先选择灵修书籍');
+                return;
+            }
+            
+            if (!dateStr) {
+                alert('请选择日期');
+                return;
+            }
+            
+            if (!booksData) {
+                await loadBooksData();
+            }
+            
+            const bookData = booksData[bookId];
+            if (!bookData) {
+                return;
+            }
+            
+            const selectedDate = new Date(dateStr);
+            const month = selectedDate.getMonth() + 1;
+            const day = selectedDate.getDate();
+            
+            // 从数据库读取内容
+            await loadFromDatabase(bookData.dbFile, bookData.name, month, day);
+        }
+
+        // 从SQLite数据库读取灵修内容
+        async function loadFromDatabase(dbFile, bookName, month, day) {
+            try {
+                document.getElementById('devotion-content').innerHTML = `<p>📖 ${bookName}</p><p style="color: #666;">正在加载...</p>`;
+                document.getElementById('devotion-card').style.display = 'block';
+                
+                const response = await fetch(`../daily-devotion/${dbFile}`);
+                if (!response.ok) {
+                    throw new Error('HTTP错误: ' + response.status);
+                }
+                
+                const arrayBuffer = await response.arrayBuffer();
+                
+                // 检查SQLite签名
+                const header = new Uint8Array(arrayBuffer, 0, 16);
+                const expectedHeader = [0x53, 0x51, 0x4C, 0x69, 0x74, 0x65, 0x20, 0x66, 0x6F, 0x72, 0x6D, 0x61, 0x74, 0x20, 0x33, 0x00];
+                const isValid = header.every((byte, index) => byte === expectedHeader[index]);
+                if (!isValid) {
+                    throw new Error('无效的数据库文件');
+                }
+                
+                // 使用unpkg的sql.js
+                const SQL = await initSqlJs({ locateFile: file => `https://unpkg.com/sql.js@1.10.3/dist/${file}` });
+                db = new SQL.Database(new Uint8Array(arrayBuffer));
+                
+                // 获取所有表
+                const tables = db.exec("SELECT name FROM sqlite_master WHERE type='table'");
+                if (tables.length === 0) {
+                    throw new Error('数据库中没有表');
+                }
+                
+                const tableName = tables[0].values[0][0];
+                const columnsResult = db.exec(`PRAGMA table_info(${tableName})`);
+                const columns = columnsResult[0].values.map(col => col[1]);
+                
+                // 确定日期字段名
+                let monthField = columns.includes('Month') ? 'Month' : (columns.includes('month') ? 'month' : 'Month');
+                let dayField = columns.includes('Day') ? 'Day' : (columns.includes('day') ? 'day' : 'Day');
+                
+                // 查询当天内容
+                const query = `SELECT * FROM ${tableName} WHERE ${monthField} = ${month} AND ${dayField} = ${day}`;
+                const result = db.exec(query);
+                
+                if (result.length > 0 && result[0].values.length > 0) {
+                    displayDevotion(bookName, month, day, result[0].values[0], columns);
+                } else {
+                    // 查询第一条记录
+                    const allRows = db.exec(`SELECT * FROM ${tableName} LIMIT 1`);
+                    if (allRows.length > 0 && allRows[0].values.length > 0) {
+                        displayDevotion(bookName, month, day, allRows[0].values[0], columns);
+                    } else {
+                        throw new Error('没有找到数据');
+                    }
+                }
+                
+            } catch (error) {
+                console.error('数据库读取失败:', error);
+                const bookInfo = booksData[Object.keys(booksData).find(k => booksData[k].name === bookName)];
+                document.getElementById('devotion-content').innerHTML = `<p>📖 ${bookName}</p><p>${bookInfo?.description || '暂无描述'}</p><p style="color: #ff6b6b;">加载失败: ${error.message}</p>`;
+                document.getElementById('devotion-card').style.display = 'block';
+            }
+        }
+
+        // 显示灵修内容
+        function displayDevotion(bookName, month, day, row, columns) {
+            const data = {};
+            columns.forEach((col, index) => {
+                data[col] = row[index];
+            });
+            
+            let content = `<p><strong>📖 ${bookName} - ${month}月${day}日</strong></p>`;
+            
+            // 显示所有字段内容
+            if (data.Content || data.content) {
+                content += `<div>${data.Content || data.content}</div>`;
+            } else {
+                // 如果没有Content字段，显示所有字段
+                for (const key in data) {
+                    if (data[key] && key.toLowerCase() !== 'id') {
+                        content += `<p><strong>${key}：</strong>${data[key]}</p>`;
+                    }
+                }
+            }
+            
+            document.getElementById('devotion-content').innerHTML = content;
+            document.getElementById('devotion-card').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

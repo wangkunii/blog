@@ -1,0 +1,102 @@
+{
+    "daily-manna": {
+        "name": "每日天粮",
+        "description": "每日天粮是一本经典的灵修读物，帮助信徒每天在神的话语中得到滋养。",
+        "dbFile": "daily-manna.db"
+    },
+    "daily-spring": {
+        "name": "每日甘泉",
+        "description": "每日甘泉带领读者在每一天都经历圣灵的浇灌，如同清晨的露水滋润心田。",
+        "dbFile": "daily-spring.db"
+    },
+    "morning-dew": {
+        "name": "清晨甘露",
+        "description": "清晨甘露帮助读者在每一天开始时，以神的话语为早晨的祝福。",
+        "dbFile": "morning-dew.db"
+    },
+    "streams": {
+        "name": "活水",
+        "description": "活水帮助信徒在灵命上不断成长，如同活水江河涌流不息。",
+        "dbFile": "living-water.db"
+    },
+    "my-utmost": {
+        "name": "竭诚为主",
+        "description": "竭诚为主挑战信徒将自己完全奉献给神，为主摆上一切。",
+        "dbFile": "my-utmost.db"
+    },
+    "desert-springs": {
+        "name": "荒漠甘泉",
+        "description": "荒漠甘泉陪伴读者走过人生的荒漠，在困境中找到希望和力量。",
+        "dbFile": "streams-in-the-desert.db"
+    },
+    "night-light": {
+        "name": "静夜亮光",
+        "description": "静夜亮光在人生的黑暗时刻，如同明灯照亮前行的道路。",
+        "dbFile": "evening-light.db"
+    },
+    "flower-path": {
+        "name": "花香满径",
+        "description": "花香满径带领读者走在与主同行的美好道路上，经历生命的芬芳。",
+        "dbFile": "fragrant-path.db"
+    },
+    "great-prayer": {
+        "name": "伟大心灵的祷告",
+        "description": "伟大心灵的祷告汇集了历代属灵伟人的祷告，帮助我们学习如何祷告。",
+        "dbFile": "great-prayers.db"
+    },
+    "daily-food": {
+        "name": "日用的饮食",
+        "description": "日用的饮食提供每日所需的灵粮，帮助信徒每天在神的话语中成长。",
+        "dbFile": "daily-food.db"
+    },
+    "wilderness-feast": {
+        "name": "旷野的筵席",
+        "description": "旷野的筵席讲述在人生旷野中神丰盛的供应。",
+        "dbFile": "wilderness-feast.db"
+    },
+    "daily-proverb": {
+        "name": "每日箴言",
+        "description": "每日箴言带领读者每天默想智慧的言语。",
+        "dbFile": "daily-proverbs-2017.db"
+    },
+    "prayer-walk": {
+        "name": "每日箴言-与耶稣同行",
+        "description": "与耶稣同行的每日箴言，帮助信徒每天与主同行。",
+        "dbFile": "daily-proverbs-walk.db"
+    },
+    "streams3": {
+        "name": "活水（三）",
+        "description": "活水系列第三部，继续带领读者经历圣灵的浇灌。",
+        "dbFile": "living-water-3.db"
+    },
+    "devotion-class": {
+        "name": "灵修日课",
+        "description": "灵修日课提供系统的每日灵修指引。",
+        "dbFile": "daily-devotion-class.db"
+    },
+    "daily-bread": {
+        "name": "灵命日粮",
+        "description": "灵命日粮是广受欢迎的每日灵修读物。",
+        "dbFile": "daily-bread.db"
+    },
+    "life-quotes": {
+        "name": "生命隽语",
+        "description": "生命隽语汇集了激励人心的属灵格言。",
+        "dbFile": "life-quotes.db"
+    },
+    "truth-analysis": {
+        "name": "真道分解",
+        "description": "真道分解深入剖析圣经真理。",
+        "dbFile": "truth-analysis-2017.db"
+    },
+    "heaven-talk": {
+        "name": "说地谈天",
+        "description": "说地谈天以轻松的方式分享属灵感悟。",
+        "dbFile": "heaven-talk.db"
+    },
+    "bible-figure": {
+        "name": "默想圣经人物",
+        "description": "默想圣经人物，从他们的经历中学习属灵功课。",
+        "dbFile": "bible-characters.db"
+    }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "linqian-blog",
+  "version": "1.0.0",
+  "description": "林前先生的个人博客 - 静态网站，包含文章、书籍、灵修等内容。",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx --yes serve -l 3000 .",
+    "dev": "npx --yes serve -l 3000 .",
+    "serve": "npx --yes serve -l 3000 ."
+  },
+  "keywords": [
+    "blog",
+    "static-site",
+    "books",
+    "devotion"
+  ],
+  "author": "林前先生",
+  "license": "MIT"
+}

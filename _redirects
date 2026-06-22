@@ -1,0 +1,8 @@
+/           /index.html         200
+/home       /index.html         200
+/blog       /index.html         200
+
+/about      /posts/about-this-blog.html   301
+/about.html /posts/about-this-blog.html   301
+
+/books      /E-book/books.html   200

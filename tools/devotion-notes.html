@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>灵修笔记 - 林前先生的博客</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', 'Microsoft YaHei', serif;
+            line-height: 1.8;
+            color: #555;
+            background-color: #FFF5F5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 5%;
+        }
+
+        nav {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        nav a {
+            color: #FF9AA2;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        nav .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        nav .dropdown .dropbtn {
+            color: #FF9AA2;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        nav .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            z-index: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+        }
+
+        nav .dropdown-content a {
+            color: #555;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            margin: 0;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        nav .dropdown-content a:hover {
+            background-color: #FFF5F5;
+            color: #FF9AA2;
+        }
+
+        nav .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 2px 15px rgba(255, 218, 193, 0.4);
+        }
+
+        h1 {
+            color: #FF9AA2;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .add-note {
+            background: linear-gradient(135deg, #FFB7B2 0%, #FFDAC1 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .add-note h3 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .add-note input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .add-note textarea {
+            width: 100%;
+            height: 100px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: none;
+            margin-bottom: 15px;
+        }
+
+        .add-note button {
+            background: #FF9AA2;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-note button:hover {
+            background: #FFB7B2;
+        }
+
+        .saved-notice {
+            background: #D4EDDA;
+            color: #155724;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .note-section {
+            margin-top: 30px;
+        }
+
+        .note-section h2 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            border-bottom: 2px solid #FFB7B2;
+            padding-bottom: 10px;
+        }
+
+        .note-item {
+            background: #FFF5F5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .note-item:hover .delete-btn {
+            opacity: 1;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #FF9AA2;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #FFB7B2;
+        }
+
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .note-date {
+            color: #FF9AA2;
+            font-weight: 500;
+        }
+
+        .note-verse {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            font-style: italic;
+        }
+
+        .note-content {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .note-prayer {
+            color: #666;
+            line-height: 1.8;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            border-left: 4px solid #FFB7B2;
+        }
+
+        .prayer-label {
+            font-weight: 600;
+            color: #FF9AA2;
+            margin-bottom: 5px;
+        }
+
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #88D8B8 0%, #AAE3D9 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(136, 216, 184, 0.3);
+        }
+
+        .back-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(136, 216, 184, 0.4);
+            background: linear-gradient(135deg, #A8E6CF 0%, #C8F7DC 100%);
+        }
+    </style>
+</head>
+<body class="devotion-notes">
+    <div class="container">
+        <a href="../index.html" class="back-home">🏠 返回首页</a>
+
+        <div class="content">
+            <h1>💭 灵修笔记</h1>
+
+            <div class="add-note">
+                <div class="saved-notice" id="saved-notice">✓ 灵修记录已保存！</div>
+                <h3>记录今日灵修</h3>
+                <input type="text" id="bible-verse" placeholder="今日经文（如：约翰福音3:16）">
+                <textarea id="devotion-content" placeholder="灵修心得..."></textarea>
+                <textarea id="prayer-content" placeholder="祷告事项..."></textarea>
+                <button onclick="saveNote()">保存记录</button>
+            </div>
+
+            <div class="note-section">
+                <h2>我的灵修记录</h2>
+                <div id="notes-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadNotes() {
+            const notes = localStorage.getItem('devotionNotes');
+            if (notes) {
+                return JSON.parse(notes);
+            }
+            return [
+                { id: 1, verse: "约翰福音 3:16", content: "神爱世人，甚至将他的独生子赐给他们，叫一切信他的，不至灭亡，反得永生。", prayer: "感谢主的救赎之恩，求主帮助我每天活出基督的样式。", date: "2026-05-26" },
+                { id: 2, verse: "腓立比书 4:13", content: "我靠着那加给我力量的，凡事都能做。", prayer: "求主赐给我力量，在面对困难时能够依靠主。", date: "2026-05-25" },
+                { id: 3, verse: "诗篇 23:1", content: "耶和华是我的牧者，我必不至缺乏。", prayer: "感谢主的供应和带领，求主继续指引我的脚步。", date: "2026-05-24" }
+            ];
+        }
+
+        function saveNotes(notes) {
+            localStorage.setItem('devotionNotes', JSON.stringify(notes));
+        }
+
+        function renderNotes() {
+            const container = document.getElementById('notes-container');
+            const notes = loadNotes();
+            
+            if (notes.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #888;">还没有灵修记录，开始记录吧！</p>';
+                return;
+            }
+
+            container.innerHTML = notes.map(note => `
+                <div class="note-item">
+                    <button class="delete-btn" onclick="deleteNote(${note.id})">删除</button>
+                    <div class="note-header">
+                        <div class="note-date">${note.date}</div>
+                    </div>
+                    <div class="note-verse">${note.verse}</div>
+                    <div class="note-content">${note.content}</div>
+                    <div class="note-prayer">
+                        <div class="prayer-label">祷告</div>
+                        ${note.prayer}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveNote() {
+            const verse = document.getElementById('bible-verse').value.trim();
+            const content = document.getElementById('devotion-content').value.trim();
+            const prayer = document.getElementById('prayer-content').value.trim();
+            
+            if (!verse || !content) {
+                alert('请填写经文和心得');
+                return;
+            }
+
+            const notes = loadNotes();
+            const newNote = {
+                id: Date.now(),
+                verse: verse,
+                content: content,
+                prayer: prayer,
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            notes.unshift(newNote);
+            saveNotes(notes);
+            
+            document.getElementById('bible-verse').value = '';
+            document.getElementById('devotion-content').value = '';
+            document.getElementById('prayer-content').value = '';
+            
+            const notice = document.getElementById('saved-notice');
+            notice.style.display = 'block';
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, 2000);
+            
+            renderNotes();
+        }
+
+        function deleteNote(id) {
+            if (!confirm('确定要删除这条灵修记录吗？')) return;
+            
+            const notes = loadNotes().filter(note => note.id !== id);
+            saveNotes(notes);
+            renderNotes();
+        }
+
+        renderNotes();
+    </script>
+</body>
+</html>

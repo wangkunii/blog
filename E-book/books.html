@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>电子书阅读</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
+    <style>
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .book-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .book-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .book-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .book-item h3 {
+            font-size: 0.9rem;
+            color: #555;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .books-header {
+            background: linear-gradient(135deg, #E2B9E8, #DDA0DD);
+            color: #555;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .books-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        .books-header p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .back-home {
+            display: inline-block;
+            background: #C9A0DC;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .back-home:hover {
+            background: #DDA0DD;
+        }
+
+        .upload-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 2px 15px rgba(255, 218, 193, 0.4);
+            margin-top: 30px;
+        }
+
+        .upload-section h3 {
+            color: #FF9AA2;
+            margin-bottom: 20px;
+        }
+
+        .upload-section input[type="file"] {
+            margin-bottom: 15px;
+        }
+
+        .upload-section button {
+            background: #FF9AA2;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .upload-section button:hover {
+            background: #FFB7B2;
+        }
+
+        /* PDF阅读器遮罩（独立于 EPUB） */
+        .pdf-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 10000;
+        }
+
+        .pdf-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pdf-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            background: #333;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .pdf-header h2 {
+            margin: 0;
+            font-size: 1rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+            text-align: center;
+        }
+
+        .pdf-header button {
+            background: none;
+            border: 1px solid #fff;
+            color: #fff;
+            padding: 6px 14px;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .pdf-header button:hover {
+            background: #fff;
+            color: #333;
+        }
+
+        .pdf-frame {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+
+        /* EPUB阅读器样式 */
+        .reader-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .reader-container {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            width: 90%;
+            height: 90%;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .reader-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #E2B9E8, #DDA0DD);
+            border-bottom: 1px solid #eee;
+        }
+
+        .reader-header h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .reader-header button {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .reader-header button:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .reader-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            min-height: 0;
+        }
+
+        .reader-page {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .reader-page h1, .reader-page h2, .reader-page h3 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .reader-page p {
+            margin-bottom: 15px;
+            text-indent: 2em;
+        }
+
+        .reader-page img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .reader-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-top: 1px solid #eee;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .reader-nav button {
+            background: #E2B9E8;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #555;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reader-nav button:hover {
+            background: #DDA0DD;
+        }
+
+        .reader-nav button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .reader-nav span {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .toc-panel {
+            width: 300px;
+            background: #f5f5f5;
+            border-right: 1px solid #eee;
+            overflow-y: auto;
+            padding: 15px;
+            display: none;
+        }
+
+        .toc-panel h3 {
+            margin: 0 0 15px 0;
+            color: #555;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #E2B9E8;
+            padding-bottom: 10px;
+        }
+
+        .toc-panel ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-panel li {
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 2px;
+        }
+
+        .toc-panel li:hover {
+            background: #E2B9E8;
+        }
+
+        .toc-panel li.active {
+            background: #DDA0DD;
+            color: white;
+        }
+
+        .toc-panel a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .page-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        #page-current {
+            font-weight: bold;
+            color: #333;
+            min-width: 1.5em;
+            text-align: right;
+        }
+
+        @media (max-width: 992px) {
+            .book-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .book-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .reader-container {
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
+
+            .reader-header {
+                padding: 10px 12px;
+            }
+
+            .reader-header h2 {
+                font-size: 0.95rem;
+            }
+
+            .reader-page {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            #reader-content-area.reader-page {
+                overflow: hidden;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .book-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .reader-nav {
+                gap: 8px;
+                padding: 10px 8px;
+            }
+
+            .reader-nav button {
+                padding: 8px 14px;
+                font-size: 0.8rem;
+            }
+
+            .reader-nav button span {
+                display: none;
+            }
+
+            .page-indicator {
+                gap: 3px;
+                font-size: 0.8rem;
+            }
+
+            .pdf-header {
+                padding: 8px 10px;
+            }
+
+            .pdf-header h2 {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body class="books">
+    <div class="container">
+        <a href="../index.html" class="back-home">← 返回首页</a>
+
+        <div class="books-header">
+            <h1>📚 电子书阅读</h1>
+            <p>以基督为中心的电子书库</p>
+        </div>
+
+        <div class="content">
+            <h2>📚 推荐书籍</h2>
+            <div class="book-grid" id="recommended-books-grid"></div>
+
+            <h2>📚 我的书库</h2>
+
+            <div class="upload-section">
+                <h3>上传电子书</h3>
+                <input type="file" id="file-input" accept=".pdf,.epub" multiple>
+                <button onclick="uploadBooks()">上传</button>
+            </div>
+
+            <div class="book-grid" id="my-library-grid"></div>
+        </div>
+    </div>
+
+    <!-- EPUB阅读器遮罩 -->
+    <div class="reader-overlay" id="reader-overlay">
+        <div class="reader-container" id="reader-container">
+            <div class="reader-header">
+                <button onclick="closeReader()">✕ 关闭</button>
+                <h2 id="reader-title">电子书阅读器</h2>
+                <button onclick="toggleToc()">📚 目录</button>
+            </div>
+            <div class="reader-content">
+                <div class="toc-panel" id="toc-panel">
+                    <h3>📖 目录</h3>
+                    <ul id="toc-list"></ul>
+                </div>
+                <div id="reader-content-area" class="reader-page">
+                    <p style="text-align: center; color: #999; padding-top: 100px;">加载中...</p>
+                </div>
+            </div>
+            <div id="reader-nav" class="reader-nav">
+                <button id="prev-btn" onclick="prevPage()" disabled>
+                    ◀ <span>上一页</span>
+                </button>
+                <div class="page-indicator" id="page-indicator">
+                    <span id="page-current">-</span>
+                    <span id="page-count">/ -</span>
+                </div>
+                <button id="next-btn" onclick="nextPage()">
+                    <span>下一页</span> ▶
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF阅读器遮罩（独立实现，手机兼容） -->
+    <div class="pdf-overlay" id="pdf-overlay">
+        <div class="pdf-container">
+            <div class="pdf-header">
+                <span style="width:60px;"></span>
+                <h2 id="pdf-title">PDF阅读器</h2>
+                <button onclick="closePdf()">✕ 关闭</button>
+            </div>
+            <embed id="pdf-frame" class="pdf-frame" type="application/pdf">
+        </div>
+    </div>
+
+    <script>
+        const recommendedBooks = [
+            { title: '返璞归真', cover: '../E-book/covers/mere-christianity.jpg', file: '../E-book/recommended-books/mere-christianity-1943.epub', type: 'epub' },
+            { title: '基督徒生活手册', cover: '../E-book/covers/christian-life-manual.jpg', file: '../E-book/recommended-books/christian-life-manual-1550.epub', type: 'epub' },
+            { title: '认识神', cover: '../E-book/covers/knowing-god.jpg', file: '../E-book/recommended-books/knowing-god-1973.epub', type: 'epub' },
+            { title: '奔走天路', cover: '../E-book/covers/pilgrims-progress.jpg', file: '../E-book/recommended-books/pilgrims-progress-1678.epub', type: 'epub' },
+            { title: '圣徒永恒的安息', cover: '../E-book/covers/saints-everlasting-rest.jpg', file: '../E-book/recommended-books/saints-everlasting-rest-1650.epub', type: 'epub' },
+            { title: '殉道史', cover: '../E-book/covers/book-of-martyrs.jpg', file: '../E-book/recommended-books/book-of-martyrs-ancient.epub', type: 'epub' },
+            { title: '丰盛的恩典', cover: '../E-book/covers/grace-abounding.jpg', file: '../E-book/recommended-books/grace-abounding-1680.epub', type: 'epub' },
+            { title: '试探治死罪', cover: '../E-book/covers/temptation-and-mortification.jpg', file: '../E-book/recommended-books/temptation-and-mortification-1667.epub', type: 'epub' },
+            { title: '游子吟', cover: '../E-book/covers/song-of-the-wanderer.jpg', file: '../E-book/recommended-books/song-of-the-wanderer-2006.epub', type: 'epub' },
+            { title: '渴慕神', cover: '../E-book/covers/pursuing-god.jpg', file: '../E-book/recommended-books/pursuing-god-1948.epub', type: 'epub' },
+        ];
+
+        const myLibraryBooks = [
+            { title: '品格至关重要', cover: '../E-book/covers/character-matters.jpg', file: '../E-book/my-library/character-matters.pdf', type: 'pdf' },
+            { title: '圣经辅导介绍', cover: '../E-book/covers/introduction-to-biblical-counseling.jpg', file: '../E-book/my-library/introduction-to-biblical-counseling.pdf', type: 'pdf' },
+            { title: '培养健康的祷告生活', cover: '../E-book/covers/developing-healthy-prayer-life.jpg', file: '../E-book/my-library/developing-healthy-prayer-life.pdf', type: 'pdf' },
+            { title: '培养属灵辨识力', cover: '../E-book/covers/developing-discernment.jpg', file: '../E-book/my-library/developing-discernment.pdf', type: 'pdf' },
+            { title: '姊妹辅导姊妹', cover: '../E-book/covers/women-counseling-women.jpg', file: '../E-book/my-library/women-counseling-women.pdf', type: 'pdf' },
+            { title: '家庭门徒训练', cover: '../E-book/covers/family-discipleship.jpg', file: '../E-book/my-library/family-discipleship.pdf', type: 'pdf' },
+            { title: '敬拜的真义', cover: '../E-book/covers/the-true-meaning-of-worship.jpg', file: '../E-book/my-library/the-true-meaning-of-worship.pdf', type: 'pdf' },
+            { title: '爱上诗篇', cover: '../E-book/covers/loving-the-psalms.jpg', file: '../E-book/my-library/loving-the-psalms.pdf', type: 'pdf' },
+            { title: '牧者的工作', cover: '../E-book/covers/the-work-of-the-pastor.jpg', file: '../E-book/my-library/the-work-of-the-pastor.pdf', type: 'pdf' },
+            { title: '重新认识教会', cover: '../E-book/covers/rediscovering-the-church.jpg', file: '../E-book/my-library/rediscovering-the-church.pdf', type: 'pdf' },
+        ];
+
+        let currentBook = null;
+        let epubBook = null;
+        let epubRendition = null;
+        let currentPage = 0;
+        let totalPages = 1;
+
+        function renderBookGrid(books, containerId) {
+            const container = document.getElementById(containerId);
+            books.forEach(book => {
+                const bookItem = document.createElement('div');
+                bookItem.className = 'book-item';
+                bookItem.innerHTML = `
+                    <img src="${encodeURI(book.cover)}" alt="${book.title}">
+                    <h3>${book.title}</h3>
+                `;
+                bookItem.onclick = () => openBook(book);
+                bookItem.style.cursor = 'pointer';
+                container.appendChild(bookItem);
+            });
+        }
+
+        function openBook(book) {
+            if (book.type === 'pdf') {
+                // PDF: separate overlay with <embed> — works on mobile + desktop
+                document.getElementById('pdf-title').textContent = book.title;
+                document.getElementById('pdf-frame').src = encodeURI(book.file);
+                document.getElementById('pdf-overlay').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                return;
+            }
+
+            // EPUB: open in overlay reader
+            currentBook = book;
+            currentPage = 0;
+
+            document.getElementById('reader-title').textContent = book.title;
+            document.getElementById('reader-overlay').style.display = 'block';
+            document.getElementById('toc-panel').style.display = 'none';
+            document.getElementById('toc-list').innerHTML = '';
+
+            var contentArea = document.getElementById('reader-content-area');
+            contentArea.className = 'reader-page';
+            contentArea.style.overflow = 'hidden';
+            contentArea.style.padding = '0';
+            contentArea.style.position = 'relative';
+            contentArea.innerHTML = '<div id="epub-viewer" style="position:absolute;top:0;left:0;right:0;bottom:0;"></div>';
+            document.getElementById('reader-nav').style.display = 'flex';
+            document.getElementById('page-current').textContent = '-';
+            document.getElementById('page-count').textContent = '/ -';
+
+            if (typeof ePub === 'undefined') {
+                contentArea.innerHTML = '<p style="text-align:center;color:red;padding:30px;">EPUB阅读器库未加载，请刷新页面重试</p>';
+                return;
+            }
+
+            contentArea.innerHTML += '<p style="text-align:center;color:#aaa;padding-top:200px;" id="epub-loading">加载中…</p>';
+
+            // Use fetch to load EPUB as ArrayBuffer, bypassing epub.js XHR issues
+            fetch(encodeURI(book.file))
+                .then(function(res) {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.arrayBuffer();
+                })
+                .then(function(buffer) {
+                    var loadingEl = document.getElementById('epub-loading');
+                    if (loadingEl) loadingEl.remove();
+                    epubBook = ePub(buffer);
+                    return epubBook.ready;
+                })
+                .then(function() {
+                    epubRendition = epubBook.renderTo("epub-viewer", {
+                        width: "100%",
+                        height: "100%",
+                        flow: "paginated"
+                    });
+                    // Track real rendered pages via epub.js paginated mode
+                    totalPages = 0;
+                    document.getElementById('page-count').textContent = '/ -';
+
+                    epubRendition.on("relocated", function(location) {
+                        // Use epub.js's own rendered page numbers (paginated flow)
+                        if (location && location.start && location.start.displayed) {
+                            currentPage = location.start.displayed.page;   // current rendered page (1-based)
+                            totalPages = location.start.displayed.total;   // total rendered pages
+                        }
+                        updatePageInfo();
+                        updateNavButtons();
+                    });
+
+                    epubRendition.display();
+                })
+                .catch(function(err) {
+                    console.error('EPUB加载失败:', err);
+                    contentArea.innerHTML = '<p style="text-align:center;color:red;padding:30px;">EPUB加载失败: ' + (err.message || err) + '</p>';
+                });
+        }
+
+
+
+        function renderTOC(toc) {
+            const list = document.getElementById('toc-list');
+            toc.forEach(function(item, index) {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#" onclick="goToTOCItem(${index})">${item.label}</a>`;
+                list.appendChild(li);
+            });
+        }
+
+        function goToTOCItem(index) {
+            if (epubRendition) {
+                // Navigate by spine index; relocated event will sync displayed page
+                epubRendition.display(index);
+                document.getElementById('toc-panel').style.display = 'none';
+            }
+        }
+
+        function toggleToc() {
+            const tocPanel = document.getElementById('toc-panel');
+            tocPanel.style.display = tocPanel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function prevPage() {
+            if (epubRendition) {
+                epubRendition.prev();
+                // relocated event will update currentPage/totalPages
+            }
+        }
+
+        function nextPage() {
+            if (epubRendition) {
+                epubRendition.next();
+                // relocated event will update currentPage/totalPages
+            }
+        }
+
+        function updatePageInfo() {
+            var curEl = document.getElementById('page-current');
+            var cntEl = document.getElementById('page-count');
+            if (curEl && cntEl) {
+                curEl.textContent = currentPage || '-';
+                cntEl.textContent = '/ ' + (totalPages || '-');
+            }
+        }
+
+        function updateNavButtons() {
+            // Always enable both buttons — epub.js handles boundary cases.
+            // displayed.page is section-relative, so we can't reliably detect
+            // global book start/end from it.
+            var prevBtn = document.getElementById('prev-btn');
+            var nextBtn = document.getElementById('next-btn');
+            if (prevBtn) prevBtn.disabled = false;
+            if (nextBtn) nextBtn.disabled = false;
+        }
+
+        function closeReader() {
+            if (epubRendition) {
+                epubRendition.destroy();
+                epubRendition = null;
+            }
+            document.getElementById('reader-overlay').style.display = 'none';
+            document.getElementById('reader-content-area').innerHTML = '<p style="text-align: center; color: #999; padding-top: 100px;">加载中...</p>';
+            epubBook = null;
+        }
+
+        function closePdf() {
+            document.getElementById('pdf-overlay').style.display = 'none';
+            document.getElementById('pdf-frame').src = '';
+            document.body.style.overflow = '';
+        }
+
+        function uploadBooks() {
+            const input = document.getElementById('file-input');
+            const files = input.files;
+            if (files.length > 0) {
+                alert('上传功能开发中，请稍后使用');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderBookGrid(recommendedBooks, 'recommended-books-grid');
+            renderBookGrid(myLibraryBooks, 'my-library-grid');
+        });
+
+
+
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('reader-overlay').style.display === 'block') {
+                if (e.key === 'ArrowLeft') {
+                    prevPage();
+                } else if (e.key === 'ArrowRight') {
+                    nextPage();
+                } else if (e.key === 'Escape') {
+                    closeReader();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

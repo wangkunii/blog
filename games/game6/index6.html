@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>游戏6：讲道学 - 闯关游戏</title>
+    <link rel="stylesheet" href="style6.css">
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">← 返回首页</a>
+        
+        <h1 class="game-title">🎮 游戏6：讲道学</h1>
+        
+        <div id="start-screen" class="screen">
+            <div class="game-intro">
+                <h2>欢迎开始闯关</h2>
+                <p>本游戏包含 <span id="total-questions">0</span> 道题目</p>
+                <div class="name-input-group">
+                    <label for="player-name">请输入您的姓名：</label>
+                    <input type="text" id="player-name" class="name-input" placeholder="请输入您的姓名" maxlength="20">
+                </div>
+                <p class="tip">准备好测试你的知识了吗？</p>
+                <button id="start-btn" class="btn btn-primary">开始游戏</button>
+            </div>
+        </div>
+        
+        <div id="game-screen" class="screen hidden">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="question-counter">
+                第 <span id="current-question">1</span> / <span id="total">0</span> 题
+            </div>
+            <div class="question-box">
+                <h2 id="question-text" class="question-text"></h2>
+                <div id="lesson-info" class="lesson-info"></div>
+                <div id="options" class="options"></div>
+            </div>
+            <div id="feedback" class="feedback hidden"></div>
+        </div>
+        
+        <div id="result-screen" class="screen hidden">
+            <h2>游戏结束</h2>
+            <div class="score-display">
+                <div class="score">得分：<span id="score">0</span> / <span id="total-questions-result">0</span></div>
+                <div class="percentage"><span id="percentage">0</span>%</div>
+            </div>
+            <div id="encouragement" class="encouragement"></div>
+            
+            <div id="certificate-section" class="certificate-section hidden">
+                <button id="certificate-btn" class="btn btn-certificate">🏆 领取荣誉证书</button>
+            </div>
+            
+            <div id="wrong-answers" class="wrong-answers"></div>
+            
+            <button id="restart-btn" class="btn btn-primary">重新开始</button>
+            <a href="../index.html" class="btn btn-secondary">返回首页</a>
+        </div>
+        
+        <div id="certificate-modal" class="certificate-modal hidden">
+            <div class="certificate-box">
+                <div class="certificate-decorate certificate-decorate-tl"></div>
+                <div class="certificate-decorate certificate-decorate-tr"></div>
+                <div class="certificate-decorate certificate-decorate-bl"></div>
+                <div class="certificate-decorate certificate-decorate-br"></div>
+                <div class="certificate-content">
+                    <div class="certificate-title">🏆 荣 誉 证 书 🏆</div>
+                    <div class="certificate-subtitle">HONORARY CREDENTIAL</div>
+                    <div class="certificate-body">
+                        <p class="certificate-text">兹有 <span id="cert-name" class="cert-name"></span> 学员：</p>
+                        <p class="certificate-text">在<span id="cert-course" class="cert-course">初信栽培系列</span>闯关游戏中表现优异，</p>
+                        <p class="certificate-text">以 <span id="cert-score" class="cert-score"></span> 分的优异成绩通过考核，</p>
+                        <p class="certificate-text">特此颁发荣誉证书！</p>
+                    </div>
+                    <div class="certificate-message">
+                        🌟 愿你在真道上继续成长，生命丰盛，荣耀主名！🌟
+                    </div>
+                    <div class="certificate-footer">
+                        <div class="certificate-org">QiHi 小组</div>
+                        <div class="certificate-date" id="cert-date"></div>
+                    </div>
+                    <button id="close-certificate-btn" class="btn btn-certificate">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="questions6.js"></script>
+    <script src="game6.js"></script>
+</body>
+</html>
